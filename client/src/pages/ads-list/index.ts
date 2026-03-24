@@ -1,0 +1,1 @@
+export { AdsListPage } from './page'
