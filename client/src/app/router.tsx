@@ -1,8 +1,8 @@
 ﻿import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { AdDetailsPage } from '../pages/ad-details'
-import { AdEditPage } from '../pages/ad-edit'
-import { AdsListPage } from '../pages/ads-list'
+import { AdDetailsPage } from '@/pages/ad-details'
+import { AdEditPage } from '@/pages/ad-edit'
+import { AdsListPage } from '@/pages/ads-list'
 
 export const AppRouter = () => {
 	return (
@@ -14,3 +14,4 @@ export const AppRouter = () => {
 		</Routes>
 	)
 }
+

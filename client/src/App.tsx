@@ -1,10 +1,10 @@
-﻿import { ActionIcon, Affix, Container, Stack } from '@mantine/core'
+import { ActionIcon, Affix, Container, Stack } from '@mantine/core'
 import { IconMoon, IconSun } from '@tabler/icons-react'
 
 import { ErrorBoundary } from './app/ErrorBoundary'
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { AppRouter } from './app/router'
-import { toggleTheme } from './store/themeSlice'
+import { toggleTheme } from './features/theme-toggle'
 
 function App() {
 	const dispatch = useAppDispatch()
