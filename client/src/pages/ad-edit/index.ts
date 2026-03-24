@@ -1,0 +1,1 @@
+export { AdEditPage } from './page'

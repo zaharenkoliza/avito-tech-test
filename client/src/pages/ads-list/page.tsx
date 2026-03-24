@@ -30,6 +30,7 @@ export const AdsListPage = () => {
 	const dispatch = useAppDispatch()
 	const listState = useAppSelector((state) => state.list)
 	const [params, setParams] = useSearchParams()
+	const paramsString = params.toString()
 	const [data, setData] = useState<AdsListResponse>({ items: [], total: 0 })
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
@@ -37,7 +38,15 @@ export const AdsListPage = () => {
 	const [searchInput, setSearchInput] = useState('')
 
 	useEffect(() => {
-		const parsed = buildListQueryFromSearchParams(params)
+		document.body.style.background = '#f7f5f8'
+
+		return () => {
+			document.body.style.background = '#ffffff'
+		}
+	}, [])
+
+	useEffect(() => {
+		const parsed = buildListQueryFromSearchParams(new URLSearchParams(paramsString))
 		dispatch(
 			setFromQueryState({
 				q: parsed.q,
@@ -48,7 +57,7 @@ export const AdsListPage = () => {
 				page: parsed.page,
 			}),
 		)
-	}, [dispatch, params])
+	}, [dispatch, paramsString])
 
 	useEffect(() => {
 		setSearchInput(listState.q)
@@ -101,27 +110,22 @@ export const AdsListPage = () => {
 			sortDirection: listState.sortDirection,
 			page: listState.page,
 		})
-		if (params.toString() !== nextParams.toString()) {
+		if (paramsString !== nextParams.toString()) {
 			setParams(nextParams, { replace: true })
 		}
 
 		return () => controller.abort()
-	}, [listState, params, setParams])
+	}, [listState, paramsString, setParams])
 
 	const totalPages = Math.max(1, Math.ceil(data.total / APP_CONFIG.pageSize))
 	const sortValue = `${listState.sortColumn}:${listState.sortDirection}`
 
 	return (
-		<Stack
-			px={{ base: 'md', md: 0 }}
-			py={0}
-			gap="lg"
-			style={{ width: '100%' }}
-		>
+		<Stack px={{ base: 'md', md: 0 }} py={0} gap="lg" style={{ width: '100%' }}>
 			<div>
 				<Title order={2}>Мои объявления</Title>
 				<Text c="#8a8a8a" size="lg">
-					Всего: {data.total}
+					{data.total} объявления
 				</Text>
 			</div>
 
@@ -158,13 +162,15 @@ export const AdsListPage = () => {
 							<AdsResults items={data.items} layout={listState.layout} />
 						) : null}
 
-						<Pagination
-							value={listState.page}
-							total={totalPages}
-							onChange={(page) => dispatch(setPage(page))}
-							size="md"
-							radius="md"
-						/>
+						{!loading ? (
+							<Pagination
+								value={listState.page}
+								total={totalPages}
+								onChange={(page) => dispatch(setPage(page))}
+								size="md"
+								radius="md"
+							/>
+						) : null}
 					</Stack>
 				</Grid.Col>
 			</Grid>
