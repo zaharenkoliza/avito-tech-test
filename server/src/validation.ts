@@ -88,3 +88,24 @@ export const ItemUpdateInSchema = z
     ]),
   );
 
+const ChatMessageSchema = z.object({
+  role: z.enum(['user', 'assistant']),
+  content: z.string().trim().min(1),
+});
+
+export const AIDescriptionInSchema = z.object({
+  item: z.unknown(),
+  mode: z.enum(['generate', 'improve']),
+  hint: z.string().trim().optional(),
+});
+
+export const AIPriceInSchema = z.object({
+  item: z.unknown(),
+});
+
+export const AIChatInSchema = z.object({
+  item: z.unknown(),
+  history: z.array(ChatMessageSchema).default([]),
+  message: z.string().trim().min(1),
+});
+

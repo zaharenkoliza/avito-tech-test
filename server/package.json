@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@fastify/middie": "^9.1.0",
+    "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
     "zod": "^4.3.6"
   }

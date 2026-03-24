@@ -1,12 +1,21 @@
-﻿import Fastify from 'fastify';
+﻿import 'dotenv/config';
+import Fastify from 'fastify';
 
 import items from 'data/items.json' with { type: 'json' };
 import { Item } from 'src/types.ts';
-import { ItemsGetInQuerySchema, ItemUpdateInSchema } from 'src/validation.ts';
+import {
+  AIChatInSchema,
+  AIDescriptionInSchema,
+  AIPriceInSchema,
+  ItemsGetInQuerySchema,
+  ItemUpdateInSchema,
+} from 'src/validation.ts';
 import { treeifyError, ZodError } from 'zod';
 import { doesItemNeedRevision } from './src/utils.ts';
+import { createAIProvider } from './src/ai/ollama.ts';
 
 const ITEMS = items as Item[];
+const aiProvider = createAIProvider();
 
 const fastify = Fastify({
   logger: true,
@@ -109,7 +118,21 @@ fastify.get<ItemsGetRequest>('/items', request => {
             new Date(item1.createdAt).valueOf() -
             new Date(item2.createdAt).valueOf();
         } else if (sortColumn === 'price') {
-          comparisonValue = item1.price - item2.price;
+          if (item1.price === null && item2.price === null) {
+            comparisonValue = 0;
+          } else if (item1.price === null) {
+            comparisonValue = 1;
+          } else if (item2.price === null) {
+            comparisonValue = -1;
+          } else {
+            comparisonValue = item1.price - item2.price;
+          }
+
+          if (sortDirection === 'desc' && item1.price !== null && item2.price !== null) {
+            return -comparisonValue;
+          }
+
+          return comparisonValue;
         }
 
         return (sortDirection === 'desc' ? -1 : 1) * comparisonValue;
@@ -176,6 +199,54 @@ fastify.put<ItemUpdateRequest>('/items/:id', (request, reply) => {
   }
 });
 
+fastify.post('/ai/description', async (request, reply) => {
+  try {
+    const payload = AIDescriptionInSchema.parse(request.body);
+    return await aiProvider.generateDescription(payload);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      reply.status(400).send({ success: false, error: treeifyError(error) });
+      return;
+    }
+
+    reply
+      .status(502)
+      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+  }
+});
+
+fastify.post('/ai/price', async (request, reply) => {
+  try {
+    const payload = AIPriceInSchema.parse(request.body);
+    return await aiProvider.suggestPrice(payload);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      reply.status(400).send({ success: false, error: treeifyError(error) });
+      return;
+    }
+
+    reply
+      .status(502)
+      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+  }
+});
+
+fastify.post('/ai/chat', async (request, reply) => {
+  try {
+    const payload = AIChatInSchema.parse(request.body);
+    return await aiProvider.chat(payload);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      reply.status(400).send({ success: false, error: treeifyError(error) });
+      return;
+    }
+
+    reply
+      .status(502)
+      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+  }
+});
+
 const port = process.env.PORT ? Number(process.env.PORT) : 8080;
 
 fastify.listen({ port }, function (err, _address) {
@@ -186,3 +257,4 @@ fastify.listen({ port }, function (err, _address) {
 
   fastify.log.debug(`Server is listening on port ${port}`);
 });
+
