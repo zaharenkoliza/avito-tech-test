@@ -157,6 +157,10 @@ export const AdEditPage = () => {
 	const isTitleValid = form.values.title.trim().length > 0
 	const isPriceValid = form.values.price !== null && form.values.price >= 0
 	const isSaveDisabled = !isTitleValid || !isPriceValid || saving
+	const handleCancel = () => {
+		clearDraft(id)
+		void navigate(`/ads/${id}`)
+	}
 
 	if (loading) {
 		return <AppLoader />
@@ -256,8 +260,7 @@ export const AdEditPage = () => {
 					variant="filled"
 					color="gray.2"
 					c="dark.4"
-					component={Link}
-					to={`/ads/${id}`}
+					onClick={handleCancel}
 					w={108}
 					h={38}
 					radius={8}
