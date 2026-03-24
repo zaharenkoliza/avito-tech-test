@@ -1,0 +1,46 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    network_mode: "service:api"
+    depends_on:
+      - ollama
+    environment:
+      PORT: 8081
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:8b}
+    restart: unless-stopped
+
+  api:
+    image: alpine/socat
+    command:
+      - TCP-LISTEN:8080,fork,reuseaddr,bind=0.0.0.0
+      - TCP:127.0.0.1:8081
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+      - api
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
