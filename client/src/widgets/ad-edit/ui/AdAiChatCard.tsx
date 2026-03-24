@@ -2,8 +2,9 @@ import { ActionIcon, Badge, Card, Paper, Stack, Text, TextInput } from '@mantine
 import { IconBulb, IconMessageCircle2, IconSend2 } from '@tabler/icons-react'
 import { useState } from 'react'
 
-import type { ChatMessage } from '@/shared/api'
 import { AiRequestErrorNotice } from './AiRequestErrorNotice'
+
+import type { ChatMessage } from '@/shared/api'
 
 interface Props {
 	chat: ChatMessage[]

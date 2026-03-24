@@ -14,15 +14,44 @@ import {
 import { type UseFormReturnType } from '@mantine/form'
 import { IconBulb, IconLoader2, IconX } from '@tabler/icons-react'
 
-import { CATEGORY_LABELS, type Category, type ItemWithRevision } from '@/entities/ad'
-import { formatPrice } from '@/shared/utils/format'
 import { AiRequestErrorNotice } from './AiRequestErrorNotice'
 import { DescriptionDiffCard } from './DescriptionDiffCard'
+
+import type {
+	AutoParams,
+	ElectronicsParams,
+	RealEstateParams,
+} from '@/entities/ad/model/types'
+
+import { CATEGORY_LABELS, type Category, type ItemWithRevision } from '@/entities/ad'
+import { formatPrice } from '@/shared/utils/format'
 
 const categoryOptions = [
 	{ value: 'auto', label: CATEGORY_LABELS.auto },
 	{ value: 'real_estate', label: CATEGORY_LABELS.real_estate },
 	{ value: 'electronics', label: CATEGORY_LABELS.electronics },
+]
+
+const autoTransmissionOptions = [
+	{ value: 'automatic', label: 'Автомат' },
+	{ value: 'manual', label: 'Механика' },
+]
+
+const realEstateTypeOptions = [
+	{ value: 'flat', label: 'Квартира' },
+	{ value: 'house', label: 'Дом' },
+	{ value: 'room', label: 'Комната' },
+]
+
+const electronicsTypeOptions = [
+	{ value: 'phone', label: 'Телефон' },
+	{ value: 'laptop', label: 'Ноутбук' },
+	{ value: 'misc', label: 'Прочее' },
+]
+
+const electronicsConditionOptions = [
+	{ value: 'new', label: 'Новый' },
+	{ value: 'used', label: 'Б/У' },
 ]
 
 const requiredLabel = (label: string) => (
@@ -46,6 +75,8 @@ const clearButton = (onClear: () => void) => (
 		<IconX size={12} />
 	</ActionIcon>
 )
+
+const getEmptyParamsByCategory = (): ItemWithRevision['params'] => ({})
 
 const aiActionButtonProps = {
 	variant: 'light' as const,
@@ -75,6 +106,205 @@ const aiButtonIcon = (isLoading: boolean) =>
 	) : (
 		<IconBulb size={16} stroke={1.8} />
 	)
+
+const renderTextField = (
+	label: string,
+	value: string,
+	onChange: (value: string) => void,
+	onClear: () => void,
+) => (
+	<TextInput
+		label={label}
+		radius={8}
+		value={value}
+		onChange={(event) => onChange(event.currentTarget.value)}
+		rightSection={value ? clearButton(onClear) : undefined}
+	/>
+)
+
+interface CategoryFieldsProps {
+	form: UseFormReturnType<ItemWithRevision>
+}
+
+const AutoFields = ({ form }: CategoryFieldsProps) => {
+	const params = form.values.params as AutoParams
+
+	return (
+		<>
+		{renderTextField(
+			'Марка',
+			String(params.brand ?? ''),
+			(value) => form.setFieldValue('params.brand', value),
+			() => form.setFieldValue('params.brand', ''),
+		)}
+		{renderTextField(
+			'Модель',
+			String(params.model ?? ''),
+			(value) => form.setFieldValue('params.model', value),
+			() => form.setFieldValue('params.model', ''),
+		)}
+		<NumberInput
+			label="Год выпуска"
+			min={0}
+			radius={8}
+			allowDecimal={false}
+			value={params.yearOfManufacture ?? ''}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.yearOfManufacture',
+					typeof value === 'number' ? value : undefined,
+				)
+			}
+		/>
+		<Select
+			label="Коробка передач"
+			radius={8}
+			data={autoTransmissionOptions}
+			value={params.transmission ?? null}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.transmission',
+					value === 'automatic' || value === 'manual' ? value : undefined,
+				)
+			}
+			clearable
+		/>
+		<NumberInput
+			label="Пробег"
+			min={0}
+			radius={8}
+			value={params.mileage ?? ''}
+			onChange={(value) =>
+				form.setFieldValue('params.mileage', typeof value === 'number' ? value : undefined)
+			}
+		/>
+		<NumberInput
+			label="Мощность двигателя"
+			min={0}
+			radius={8}
+			value={params.enginePower ?? ''}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.enginePower',
+					typeof value === 'number' ? value : undefined,
+				)
+			}
+		/>
+		</>
+	)
+}
+
+const RealEstateFields = ({ form }: CategoryFieldsProps) => {
+	const params = form.values.params as RealEstateParams
+
+	return (
+		<>
+		<Select
+			label="Тип недвижимости"
+			radius={8}
+			data={realEstateTypeOptions}
+			value={params.type ?? null}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.type',
+					value === 'flat' || value === 'house' || value === 'room' ? value : undefined,
+				)
+			}
+			clearable
+		/>
+		{renderTextField(
+			'Адрес',
+			String(params.address ?? ''),
+			(value) => form.setFieldValue('params.address', value),
+			() => form.setFieldValue('params.address', ''),
+		)}
+		<NumberInput
+			label="Площадь"
+			min={0}
+			radius={8}
+			value={params.area ?? ''}
+			onChange={(value) =>
+				form.setFieldValue('params.area', typeof value === 'number' ? value : undefined)
+			}
+		/>
+		<NumberInput
+			label="Этаж"
+			min={0}
+			radius={8}
+			allowDecimal={false}
+			value={params.floor ?? ''}
+			onChange={(value) =>
+				form.setFieldValue('params.floor', typeof value === 'number' ? value : undefined)
+			}
+		/>
+		</>
+	)
+}
+
+const ElectronicsFields = ({ form }: CategoryFieldsProps) => {
+	const params = form.values.params as ElectronicsParams
+
+	return (
+		<>
+		<Select
+			label="Тип техники"
+			radius={8}
+			data={electronicsTypeOptions}
+			value={params.type ?? null}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.type',
+					value === 'phone' || value === 'laptop' || value === 'misc' ? value : undefined,
+				)
+			}
+			clearable
+		/>
+		{renderTextField(
+			'Бренд',
+			String(params.brand ?? ''),
+			(value) => form.setFieldValue('params.brand', value),
+			() => form.setFieldValue('params.brand', ''),
+		)}
+		{renderTextField(
+			'Модель',
+			String(params.model ?? ''),
+			(value) => form.setFieldValue('params.model', value),
+			() => form.setFieldValue('params.model', ''),
+		)}
+		<Select
+			label="Состояние"
+			radius={8}
+			data={electronicsConditionOptions}
+			value={params.condition ?? null}
+			onChange={(value) =>
+				form.setFieldValue(
+					'params.condition',
+					value === 'new' || value === 'used' ? value : undefined,
+				)
+			}
+			clearable
+		/>
+		{renderTextField(
+			'Цвет',
+			String(params.color ?? ''),
+			(value) => form.setFieldValue('params.color', value),
+			() => form.setFieldValue('params.color', ''),
+		)}
+		</>
+	)
+}
+
+const CategoryFields = ({ form }: CategoryFieldsProps) => {
+	if (form.values.category === 'auto') {
+		return <AutoFields form={form} />
+	}
+
+	if (form.values.category === 'real_estate') {
+		return <RealEstateFields form={form} />
+	}
+
+	return <ElectronicsFields form={form} />
+}
 
 interface PriceSuggestion {
 	value: number
@@ -122,17 +352,28 @@ export const AdEditForm = ({
 		: hasRequestedPrice
 			? 'Повторить запрос'
 			: 'Узнать рыночную цену'
-
 	const descriptionMode = form.values.description?.trim() ? 'improve' : 'generate'
-
 	const descriptionInitialLabel =
 		descriptionMode === 'generate' ? 'Придумать описание' : 'Улучшить описание'
-
 	const descriptionButtonLabel = isGeneratingDescription
 		? 'Выполняется запрос'
 		: hasRequestedDescription
 			? 'Повторить запрос'
 			: descriptionInitialLabel
+
+	const handleCategoryChange = (value: string | null) => {
+		const nextCategory = (value ?? 'electronics') as Category
+
+		if (nextCategory === form.values.category) {
+			return
+		}
+
+		form.setValues({
+			...form.values,
+			category: nextCategory,
+			params: getEmptyParamsByCategory(),
+		} as ItemWithRevision)
+	}
 
 	return (
 		<Stack>
@@ -142,9 +383,7 @@ export const AdEditForm = ({
 				value={form.values.category}
 				w={220}
 				radius={8}
-				onChange={(value) =>
-					form.setFieldValue('category', (value ?? 'electronics') as Category)
-				}
+				onChange={handleCategoryChange}
 			/>
 			<Divider />
 
@@ -175,7 +414,7 @@ export const AdEditForm = ({
 						{...form.getInputProps('price')}
 					/>
 					<Popover
-						opened={Boolean(priceSuggestion || priceRequestError)}
+						opened={Boolean(priceSuggestion ?? priceRequestError)}
 						position="bottom-start"
 						withArrow
 						shadow="md"
@@ -233,80 +472,7 @@ export const AdEditForm = ({
 			</Stack>
 			<Divider />
 
-			{form.values.category === 'auto' ? (
-				<>
-					<TextInput
-						label="Марка"
-						radius={8}
-						value={String(form.values.params.brand ?? '')}
-						onChange={(e) => form.setFieldValue('params.brand', e.currentTarget.value)}
-						rightSection={
-							form.values.params.brand
-								? clearButton(() => form.setFieldValue('params.brand', ''))
-								: undefined
-						}
-					/>
-					<TextInput
-						label="Модель"
-						radius={8}
-						value={String(form.values.params.model ?? '')}
-						onChange={(e) => form.setFieldValue('params.model', e.currentTarget.value)}
-						rightSection={
-							form.values.params.model
-								? clearButton(() => form.setFieldValue('params.model', ''))
-								: undefined
-						}
-					/>
-				</>
-			) : null}
-			{form.values.category === 'real_estate' ? (
-				<>
-					<TextInput
-						label="Адрес"
-						radius={8}
-						value={String(form.values.params.address ?? '')}
-						onChange={(e) => form.setFieldValue('params.address', e.currentTarget.value)}
-						rightSection={
-							form.values.params.address
-								? clearButton(() => form.setFieldValue('params.address', ''))
-								: undefined
-						}
-					/>
-					<NumberInput
-						label="Площадь"
-						min={0}
-						radius={8}
-						value={Number(form.values.params.area ?? 0)}
-						onChange={(value) => form.setFieldValue('params.area', Number(value))}
-					/>
-				</>
-			) : null}
-			{form.values.category === 'electronics' ? (
-				<>
-					<TextInput
-						label="Бренд"
-						radius={8}
-						value={String(form.values.params.brand ?? '')}
-						onChange={(e) => form.setFieldValue('params.brand', e.currentTarget.value)}
-						rightSection={
-							form.values.params.brand
-								? clearButton(() => form.setFieldValue('params.brand', ''))
-								: undefined
-						}
-					/>
-					<TextInput
-						label="Модель"
-						radius={8}
-						value={String(form.values.params.model ?? '')}
-						onChange={(e) => form.setFieldValue('params.model', e.currentTarget.value)}
-						rightSection={
-							form.values.params.model
-								? clearButton(() => form.setFieldValue('params.model', ''))
-								: undefined
-						}
-					/>
-				</>
-			) : null}
+			<CategoryFields form={form} />
 			<Divider />
 
 			<Stack gap="xs">

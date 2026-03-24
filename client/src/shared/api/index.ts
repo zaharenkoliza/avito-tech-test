@@ -3,6 +3,7 @@ export type {
 	AdsListResponse,
 	AiChatRequest,
 	AiChatResponse,
+	AiDescriptionMode,
 	AiDescriptionRequest,
 	AiDescriptionResponse,
 	AiPriceRequest,

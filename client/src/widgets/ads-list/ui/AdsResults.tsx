@@ -2,11 +2,12 @@ import { Box, Card, Paper, SimpleGrid, Stack, Text } from '@mantine/core'
 import { IconPhoto } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 
+import type { ListState } from '@/features/ads-list-filters'
+import type { AdListItem } from '@/shared/api'
+
 import { CATEGORY_LABELS } from '@/entities/ad'
 import { formatPrice } from '@/shared/utils/format'
 
-import type { ListState } from '@/features/ads-list-filters'
-import type { AdListItem } from '@/shared/api'
 
 interface Props {
 	items: AdListItem[]

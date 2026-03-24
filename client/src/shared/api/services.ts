@@ -12,7 +12,7 @@ import type {
 } from './types'
 import type { Category, ItemWithRevision } from '@/entities/ad'
 
-const AI_REQUEST_TIMEOUT_MS = 120000
+const AI_REQUEST_TIMEOUT_MS = 300000
 
 export const adsService = {
 	async getAds(query: ListQuery, signal?: AbortSignal): Promise<AdsListResponse> {

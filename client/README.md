@@ -1,73 +1,129 @@
-# React + TypeScript + Vite
+﻿# Avito Tech Test: Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Клиентская часть приложения для работы с объявлениями: список, карточка, редактирование, AI-помощник для описания/цены/чата.
 
-Currently, two official plugins are available:
+## Что реализовано
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Список объявлений (`/ads`):
+- поиск, фильтры, сортировка, пагинация;
+- переключение layout (`grid`/`list`);
+- синхронизация query-параметров URL со state.
 
-## React Compiler
+2. Карточка объявления (`/ads/:id`):
+- отображение основных данных, характеристик и статуса доработок;
+- кнопка перехода к редактированию;
+- кнопка возврата к списку при ошибке загрузки.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. Редактирование (`/ads/:id/edit`):
+- форма редактирования по категории;
+- автосохранение черновика в `localStorage`;
+- AI-функции: генерация/улучшение описания, подсказка цены, чат;
+- сохранение и возврат на карточку объявления.
 
-## Expanding the ESLint configuration
+4. Тема:
+- переключатель светлой/темной темы в шапке;
+- выбранная тема сохраняется в `localStorage`.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Запуск проекта
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 1) Локально
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Требования:
+- Node.js 20+
+- npm 10+
+- поднятый backend на `http://localhost:8080`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Команды:
+
+```bash
+cd client
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Клиент будет доступен на `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Опционально можно переопределить API адрес:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# .env
+VITE_API_BASE_URL=http://localhost:8080
 ```
+
+## 2) Через Docker (из корня репозитория)
+
+```bash
+docker compose up --build
+```
+
+Поднимутся `client`, `server`, `ollama`.
+
+## Стек технологий
+
+- React 19 + TypeScript
+- Vite
+- Mantine UI
+- React Router
+- Redux Toolkit (только для глобального state)
+- Axios
+- Vitest + Testing Library
+
+## Архитектура
+
+- Подход: `container page + feature components`.
+- Структура и правила зафиксированы в [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+Ключевые принципы:
+1. По умолчанию логика в компоненте.
+2. В хук выносим только при явной боли (повторное использование/сложность/тестируемость).
+3. Redux только для действительно общего состояния (`list`, `theme`).
+
+## Важные решения по ТЗ
+
+1. ID на backend:
+- переходы на детали/редактирование строятся от `item.id`;
+- если backend не вернул `id` в списке, показывается fallback без перехода.
+
+2. CORS:
+- клиент работает с `VITE_API_BASE_URL`;
+- CORS настраивается на backend (Fastify middleware с `Access-Control-Allow-*`).
+
+3. Кнопка возврата:
+- на страницах деталей/редактирования есть явная навигация назад к списку при ошибках/отмене сценария.
+
+4. Тема:
+- переключатель темы в `App.tsx`, состояние темы в `themeSlice` + `localStorage`.
+
+## Особенности реализации и компромиссы
+
+1. Для списка использован Redux, потому что фильтры/сортировка/пагинация образуют общий query-state и синхронизируются с URL.
+2. Локальная логика конкретной страницы (например, чатовый input) хранится внутри feature-компонента.
+3. UI крупных страниц разнесен на feature-компоненты для читаемости без усложнения абстракциями.
+
+## Тесты
+
+Запуск:
+
+```bash
+cd client
+npm run test
+```
+
+Сейчас покрыты:
+- утилиты `shared`;
+- reducer `listSlice`;
+- базовый сценарий страницы списка.
+
+Зоны для расширения:
+1. сценарии ошибок API для `AdDetailsPage`/`AdEditPage`;
+2. проверки автосохранения черновиков;
+3. проверка поведения переключателя темы.
+
+
+1. id на бэк
+2. решение по корс
+3. кнопка вернуться к списку товаров
+
+не забыть про переключатель темы
+
+ollama latest слишком долго грузилась

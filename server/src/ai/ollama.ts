@@ -39,6 +39,8 @@ type OllamaConfig = {
   timeoutMs: number;
 };
 
+const DEFAULT_OLLAMA_TIMEOUT_MS = 300000;
+
 const callOllama = async (config: OllamaConfig, prompt: string): Promise<unknown> => {
   const { baseUrl, model, timeoutMs } = config;
   const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
@@ -118,7 +120,7 @@ const chat = async (config: OllamaConfig, input: ChatInput): Promise<ChatOutput>
 const createOllamaProvider = (
   baseUrl: string,
   model: string,
-  timeoutMs = 120000,
+  timeoutMs = DEFAULT_OLLAMA_TIMEOUT_MS,
 ): AIProvider => {
   const config: OllamaConfig = { baseUrl, model, timeoutMs };
 
@@ -132,7 +134,9 @@ const createOllamaProvider = (
 export const createAIProvider = () => {
   const baseUrl = process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434';
   const model = process.env.OLLAMA_MODEL ?? 'llama3:latest';
-  const timeoutMs = process.env.OLLAMA_TIMEOUT_MS ? Number(process.env.OLLAMA_TIMEOUT_MS) : 120000;
+  const timeoutMs = process.env.OLLAMA_TIMEOUT_MS
+    ? Number(process.env.OLLAMA_TIMEOUT_MS)
+    : DEFAULT_OLLAMA_TIMEOUT_MS;
 
   return createOllamaProvider(baseUrl, model, timeoutMs);
 };

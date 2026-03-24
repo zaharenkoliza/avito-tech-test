@@ -12,8 +12,8 @@ import {
 } from '@mantine/core'
 import { IconChevronUp } from '@tabler/icons-react'
 
-import { ALL_CATEGORIES } from '@/features/ads-list-filters'
 import { CATEGORY_LABELS, type Category } from '@/entities/ad'
+import { ALL_CATEGORIES } from '@/features/ads-list-filters'
 
 interface Props {
 	isCategoriesOpen: boolean

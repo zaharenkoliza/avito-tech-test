@@ -1,6 +1,6 @@
 ﻿import { Center, Loader } from '@mantine/core'
 
-type AppLoaderProps = {
+interface AppLoaderProps {
 	minHeight?: number
 	padding?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
