@@ -1,6 +1,6 @@
 ﻿import { createSlice } from '@reduxjs/toolkit'
 
-import { storage } from '../shared/storage/localStorage'
+import { storage } from '@/shared/storage/localStorage'
 
 const THEME_KEY = 'avito_theme_mode'
 
@@ -29,4 +29,6 @@ const themeSlice = createSlice({
 
 export const { toggleTheme, setTheme } = themeSlice.actions
 export const themeReducer = themeSlice.reducer
+
+
 

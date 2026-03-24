@@ -1,6 +1,6 @@
 ﻿import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { Category } from '../types/item'
+import type { Category } from '@/entities/ad'
 
 export interface ListState {
 	q: string
@@ -85,4 +85,6 @@ export const {
 } = listSlice.actions
 
 export const listReducer = listSlice.reducer
+
+
 
