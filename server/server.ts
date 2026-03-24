@@ -118,21 +118,7 @@ fastify.get<ItemsGetRequest>('/items', request => {
             new Date(item1.createdAt).valueOf() -
             new Date(item2.createdAt).valueOf();
         } else if (sortColumn === 'price') {
-          if (item1.price === null && item2.price === null) {
-            comparisonValue = 0;
-          } else if (item1.price === null) {
-            comparisonValue = 1;
-          } else if (item2.price === null) {
-            comparisonValue = -1;
-          } else {
-            comparisonValue = item1.price - item2.price;
-          }
-
-          if (sortDirection === 'desc' && item1.price !== null && item2.price !== null) {
-            return -comparisonValue;
-          }
-
-          return comparisonValue;
+          comparisonValue = item1.price - item2.price;
         }
 
         return (sortDirection === 'desc' ? -1 : 1) * comparisonValue;
