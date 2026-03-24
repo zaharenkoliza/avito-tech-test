@@ -77,7 +77,11 @@ const renderDiffText = (parts: DiffPart[], mode: 'before' | 'after') => {
 			: parts.filter((part) => part.type !== 'removed')
 
 	if (visible.length === 0) {
-		return <Text c="dimmed" size="sm">Текст отсутствует</Text>
+		return (
+			<Text c="dimmed" size="sm">
+				Текст отсутствует
+			</Text>
+		)
 	}
 
 	return (
@@ -104,6 +108,7 @@ const renderDiffText = (parts: DiffPart[], mode: 'before' | 'after') => {
 }
 
 export const DescriptionDiffCard = ({ originalText, improvedText, onApply, onClose }: Props) => {
+	const hasOriginalText = Boolean(originalText.trim())
 	const parts = useMemo(
 		() => buildWordDiff(originalText, improvedText),
 		[originalText, improvedText],
@@ -113,28 +118,49 @@ export const DescriptionDiffCard = ({ originalText, improvedText, onApply, onClo
 		<Card withBorder>
 			<Stack gap="md">
 				<Group justify="space-between" wrap="wrap">
-					<Text fw={600}>Было {'>'} Стало</Text>
-					<Badge color="green" variant="light">AI предложение</Badge>
+					<Text fw={600}>
+						{hasOriginalText ? 'Было > Стало' : 'Предложенное описание'}
+					</Text>
+					<Badge color="green" variant="light">
+						AI предложение
+					</Badge>
 				</Group>
 				<Divider />
-				<Grid>
-					<Grid.Col span={{ base: 12, md: 6 }}>
-						<Stack gap="xs">
-							<Text size="sm" fw={600} c="dimmed">Было</Text>
-							<Paper p="sm" bg="gray.0" withBorder>
-								{renderDiffText(parts, 'before')}
-							</Paper>
-						</Stack>
-					</Grid.Col>
-					<Grid.Col span={{ base: 12, md: 6 }}>
-						<Stack gap="xs">
-							<Text size="sm" fw={600} c="dimmed">Стало</Text>
-							<Paper p="sm" bg="green.0" withBorder>
-								{renderDiffText(parts, 'after')}
-							</Paper>
-						</Stack>
-					</Grid.Col>
-				</Grid>
+				{hasOriginalText ? (
+					<Grid>
+						<Grid.Col span={{ base: 12, md: 6 }}>
+							<Stack gap="xs">
+								<Text size="sm" fw={600} c="dimmed">
+									Было
+								</Text>
+								<Paper p="sm" bg="gray.0" withBorder>
+									{renderDiffText(parts, 'before')}
+								</Paper>
+							</Stack>
+						</Grid.Col>
+						<Grid.Col span={{ base: 12, md: 6 }}>
+							<Stack gap="xs">
+								<Text size="sm" fw={600} c="dimmed">
+									Стало
+								</Text>
+								<Paper p="sm" bg="green.0" withBorder>
+									{renderDiffText(parts, 'after')}
+								</Paper>
+							</Stack>
+						</Grid.Col>
+					</Grid>
+				) : (
+					<Stack gap="xs">
+						<Text size="sm" fw={600} c="dimmed">
+							Текст от AI
+						</Text>
+						<Paper p="sm" bg="green.0" withBorder>
+							<Text size="sm" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>
+								{improvedText}
+							</Text>
+						</Paper>
+					</Stack>
+				)}
 				<Group justify="flex-end">
 					<Button size="xs" variant="default" onClick={onClose}>
 						Закрыть

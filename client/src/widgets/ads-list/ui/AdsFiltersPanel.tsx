@@ -96,15 +96,18 @@ export const AdsFiltersPanel = ({
 											root: {
 												display: 'flex',
 												alignItems: 'center',
+												cursor: 'pointer',
 											},
 											body: {
 												alignItems: 'center',
+												cursor: 'pointer',
 											},
 											input: {
 												width: 20,
 												height: 20,
 												borderColor: '#d9d9d9',
 												borderRadius: 4,
+												cursor: 'pointer',
 											},
 											label: {
 												paddingLeft: 10,
@@ -112,6 +115,7 @@ export const AdsFiltersPanel = ({
 												lineHeight: '20px',
 												fontWeight: 400,
 												color: '#2f2f2f',
+												cursor: 'pointer',
 											},
 										}}
 									/>
@@ -139,6 +143,9 @@ export const AdsFiltersPanel = ({
 							onChange={(e) => onNeedsRevisionChange(e.currentTarget.checked)}
 							size="sm"
 							styles={{
+								root: {
+									cursor: 'pointer',
+								},
 								track: {
 									width: 44,
 									height: 22,
@@ -147,6 +154,7 @@ export const AdsFiltersPanel = ({
 									borderRadius: 999,
 									backgroundColor: needsRevision ? '#d9e9ff' : '#d1d1d1',
 									transition: 'background-color 160ms ease',
+									cursor: 'pointer',
 								},
 								thumb: {
 									width: 16,
@@ -155,9 +163,11 @@ export const AdsFiltersPanel = ({
 									backgroundColor: needsRevision ? '#2f8cff' : '#ffffff',
 									boxShadow: '0 1px 3px rgba(0, 0, 0, 0.18)',
 									transition: 'background-color 160ms ease',
+									cursor: 'pointer',
 								},
 								body: {
 									alignItems: 'center',
+									cursor: 'pointer',
 								},
 							}}
 						/>

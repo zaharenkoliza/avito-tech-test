@@ -16,6 +16,7 @@ import { IconBulb, IconLoader2, IconX } from '@tabler/icons-react'
 
 import { CATEGORY_LABELS, type Category, type ItemWithRevision } from '@/entities/ad'
 import { formatPrice } from '@/shared/utils/format'
+import { AiRequestErrorNotice } from './AiRequestErrorNotice'
 import { DescriptionDiffCard } from './DescriptionDiffCard'
 
 const categoryOptions = [
@@ -188,17 +189,25 @@ export const AdEditForm = ({
 								{priceButtonLabel}
 							</Button>
 						</Popover.Target>
-						<Popover.Dropdown>
+						<Popover.Dropdown
+							bg={priceRequestError ? 'transparent' : undefined}
+							p={priceRequestError ? 0 : undefined}
+							style={
+								priceRequestError
+									? {
+											background: 'transparent',
+											border: 'none',
+											boxShadow: 'none',
+									  }
+									: undefined
+							}
+						>
 							<Stack gap="xs" maw={340}>
-								<Text fw={600}>Ответ AI:</Text>
 								{priceRequestError ? (
-									<>
-										<Button size="xs" variant="default" onClick={onClosePriceResult}>
-											Закрыть
-										</Button>
-									</>
+									<AiRequestErrorNotice onClose={onClosePriceResult} />
 								) : (
 									<>
+										<Text fw={600}>Ответ AI:</Text>
 										{priceSuggestion ? (
 											<Text size="sm" fw={600}>
 												Предлагаемая цена: {formatPrice(priceSuggestion.value)}
@@ -322,13 +331,7 @@ export const AdEditForm = ({
 					</Text>
 				</Group>
 				{descriptionRequestError ? (
-					<Stack gap="xs">
-						<Group>
-							<Button size="xs" variant="default" onClick={onCloseDescriptionResult}>
-								Закрыть
-							</Button>
-						</Group>
-					</Stack>
+					<AiRequestErrorNotice onClose={onCloseDescriptionResult} />
 				) : null}
 				{descriptionSuggestion ? (
 					<DescriptionDiffCard

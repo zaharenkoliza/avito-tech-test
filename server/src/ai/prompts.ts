@@ -28,7 +28,7 @@ export const buildPricePrompt = (input: PriceInput): string =>
     'Ты оцениваешь рыночную цену объявления на российском рынке.',
     'Верни JSON вида: {"priceSuggestion":123456,"rationale":"..."}.',
     'priceSuggestion должен быть целым неотрицательным числом.',
-    'rationale - 1-3 предложения с объяснением.',
+    'rationale - 1-2 предложения на русском языке с объяснением.',
     'Данные объявления:',
     renderItem(input.item),
   ].join('\n\n');

@@ -9,6 +9,7 @@ import { getErrorMessage } from '@/shared/api/apiClient'
 import { adsService } from '@/shared/api/services'
 import { APP_CONFIG } from '@/shared/config/appConfig'
 import { AppLoader } from '@/shared/ui/AppLoader'
+import { formatAdsCount } from '@/shared/utils'
 import {
 	buildListQueryFromSearchParams,
 	buildSearchParamsFromListState,
@@ -36,6 +37,7 @@ export const AdsListPage = () => {
 	const [error, setError] = useState<string | null>(null)
 	const [isCategoriesOpen, setIsCategoriesOpen] = useState(true)
 	const [searchInput, setSearchInput] = useState('')
+	const [isHydratedFromUrl, setIsHydratedFromUrl] = useState(false)
 
 	useEffect(() => {
 		document.body.style.background = '#f7f5f8'
@@ -47,6 +49,7 @@ export const AdsListPage = () => {
 
 	useEffect(() => {
 		const parsed = buildListQueryFromSearchParams(new URLSearchParams(paramsString))
+
 		dispatch(
 			setFromQueryState({
 				q: parsed.q,
@@ -57,13 +60,20 @@ export const AdsListPage = () => {
 				page: parsed.page,
 			}),
 		)
+
+		setSearchInput(parsed.q)
+		setIsHydratedFromUrl(true)
 	}, [dispatch, paramsString])
 
 	useEffect(() => {
+		if (!isHydratedFromUrl) return
+
 		setSearchInput(listState.q)
-	}, [listState.q])
+	}, [isHydratedFromUrl, listState.q])
 
 	useEffect(() => {
+		if (!isHydratedFromUrl) return
+
 		const timeoutId = window.setTimeout(() => {
 			if (searchInput !== listState.q) {
 				dispatch(setQuery(searchInput))
@@ -71,9 +81,11 @@ export const AdsListPage = () => {
 		}, 400)
 
 		return () => clearTimeout(timeoutId)
-	}, [dispatch, listState.q, searchInput])
+	}, [dispatch, isHydratedFromUrl, listState.q, searchInput])
 
 	useEffect(() => {
+		if (!isHydratedFromUrl) return
+
 		const controller = new AbortController()
 		setLoading(true)
 		setError(null)
@@ -102,6 +114,20 @@ export const AdsListPage = () => {
 				if (!controller.signal.aborted) setLoading(false)
 			})
 
+		return () => controller.abort()
+	}, [
+		listState.categories,
+		listState.needsRevision,
+		listState.page,
+		listState.q,
+		listState.sortColumn,
+		listState.sortDirection,
+		isHydratedFromUrl,
+	])
+
+	useEffect(() => {
+		if (!isHydratedFromUrl) return
+
 		const nextParams = buildSearchParamsFromListState({
 			q: listState.q,
 			categories: listState.categories,
@@ -113,9 +139,17 @@ export const AdsListPage = () => {
 		if (paramsString !== nextParams.toString()) {
 			setParams(nextParams, { replace: true })
 		}
-
-		return () => controller.abort()
-	}, [listState, paramsString, setParams])
+	}, [
+		listState.categories,
+		listState.needsRevision,
+		listState.page,
+		listState.q,
+		listState.sortColumn,
+		listState.sortDirection,
+		paramsString,
+		setParams,
+		isHydratedFromUrl,
+	])
 
 	const totalPages = Math.max(1, Math.ceil(data.total / APP_CONFIG.pageSize))
 	const sortValue = `${listState.sortColumn}:${listState.sortDirection}`
@@ -125,7 +159,7 @@ export const AdsListPage = () => {
 			<div>
 				<Title order={2}>Мои объявления</Title>
 				<Text c="#8a8a8a" size="lg">
-					{data.total} объявления
+					{formatAdsCount(data.total)}
 				</Text>
 			</div>
 

@@ -3,14 +3,23 @@ import { IconBulb, IconMessageCircle2, IconSend2 } from '@tabler/icons-react'
 import { useState } from 'react'
 
 import type { ChatMessage } from '@/shared/api'
+import { AiRequestErrorNotice } from './AiRequestErrorNotice'
 
 interface Props {
 	chat: ChatMessage[]
 	isSending: boolean
+	error?: string
+	onCloseError: () => void
 	onSend: (message: string) => void
 }
 
-export const AdAiChatCard = ({ chat, isSending, onSend }: Props) => {
+export const AdAiChatCard = ({
+	chat,
+	isSending,
+	error,
+	onCloseError,
+	onSend,
+}: Props) => {
 	const [chatInput, setChatInput] = useState('')
 
 	const submit = () => {
@@ -66,6 +75,8 @@ export const AdAiChatCard = ({ chat, isSending, onSend }: Props) => {
 						</Paper>
 					))}
 				</Stack>
+
+				{error ? <AiRequestErrorNotice onClose={onCloseError} /> : null}
 
 				<TextInput
 					value={chatInput}

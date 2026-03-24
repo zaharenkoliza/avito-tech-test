@@ -9,13 +9,13 @@
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconAlertCircle } from '@tabler/icons-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { AdAiChatCard, AdEditForm } from '@/widgets/ad-edit'
 import { getErrorMessage } from '@/shared/api/apiClient'
 import { aiService, adsService } from '@/shared/api/services'
-import { getMissingFields, type ItemWithRevision } from '@/entities/ad'
+import { type ItemWithRevision } from '@/entities/ad'
 import { storage } from '@/shared/storage/localStorage'
 import { AppLoader } from '@/shared/ui/AppLoader'
 
@@ -39,6 +39,7 @@ export const AdEditPage = () => {
 	const [priceSuggestion, setPriceSuggestionMap] = useState<PriceSuggestion>({})
 	const [descriptionRequestError, setDescriptionRequestError] = useState<RequestErrors>({})
 	const [priceRequestError, setPriceRequestError] = useState<RequestErrors>({})
+	const [chatRequestError, setChatRequestError] = useState<RequestErrors>({})
 	const [descriptionRequested, setDescriptionRequested] = useState<RequestFlags>({})
 	const [priceRequested, setPriceRequested] = useState<RequestFlags>({})
 	const [chatHistory, setChatHistory] = useState<Record<number, ChatMessage[]>>(() =>
@@ -193,13 +194,9 @@ export const AdEditPage = () => {
 	const priceSuggestionForAd = priceSuggestion[id]
 	const descriptionRequestErrorForAd = descriptionRequestError[id]
 	const priceRequestErrorForAd = priceRequestError[id]
+	const chatRequestErrorForAd = chatRequestError[id]
 	const hasRequestedDescription = Boolean(descriptionRequested[id])
 	const hasRequestedPrice = Boolean(priceRequested[id])
-
-	const missing = useMemo(() => {
-		if (!item) return []
-		return getMissingFields(form.values)
-	}, [form.values, item])
 
 	const runGenerateDescription = async (mode: 'generate' | 'improve') => {
 		if (isGeneratingDescription) return
@@ -243,6 +240,7 @@ export const AdEditPage = () => {
 	const sendChat = async (message: string) => {
 		if (isChatSending) return
 		setIsChatSending(true)
+		setChatRequestError((prev) => ({ ...prev, [id]: undefined }))
 		addChatMessage(id, { role: 'user', content: message })
 		try {
 			const response = await aiService.chat({
@@ -252,7 +250,7 @@ export const AdEditPage = () => {
 			})
 			addChatMessage(id, { role: 'assistant', content: response.reply })
 		} catch (e) {
-			setError(getErrorMessage(e))
+			setChatRequestError((prev) => ({ ...prev, [id]: getErrorMessage(e) }))
 		} finally {
 			setIsChatSending(false)
 		}
@@ -366,6 +364,10 @@ export const AdEditPage = () => {
 						<AdAiChatCard
 							chat={chat}
 							isSending={isChatSending}
+							error={chatRequestErrorForAd}
+							onCloseError={() =>
+								setChatRequestError((prev) => ({ ...prev, [id]: undefined }))
+							}
 							onSend={(message) => void sendChat(message)}
 						/>
 					</Stack>
@@ -382,7 +384,6 @@ export const AdEditPage = () => {
 					radius={8}
 					px={12}
 					py={8}
-					gap={8}
 					fw={400}
 					fz="md"
 					style={{
@@ -404,7 +405,6 @@ export const AdEditPage = () => {
 					radius={8}
 					px={12}
 					py={8}
-					gap={8}
 					fw={400}
 					fz="md"
 					style={{
