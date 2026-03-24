@@ -1,4 +1,4 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 
 import { APP_CONFIG } from '../config/appConfig'
 

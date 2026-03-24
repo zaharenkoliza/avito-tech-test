@@ -9,8 +9,8 @@ import type {
 	AiPriceRequest,
 	AiPriceResponse,
 	ListQuery,
-} from '../../types/api'
-import type { ItemWithRevision } from '../../types/item'
+} from './types'
+import type { Category, ItemWithRevision } from '@/entities/ad'
 
 const AI_REQUEST_TIMEOUT_MS = 120000
 
@@ -51,7 +51,7 @@ export const adsService = {
 	async updateAd(
 		id: number,
 		payload: {
-			category: string
+			category: Category
 			title: string
 			description?: string
 			price: number
@@ -95,3 +95,4 @@ export const aiService = {
 		return data
 	},
 }
+
