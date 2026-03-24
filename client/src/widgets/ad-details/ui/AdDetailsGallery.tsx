@@ -8,7 +8,6 @@ export const AdDetailsGallery = () => {
 	return (
 		<Stack gap="sm">
 			<Paper
-				withBorder
 				radius="md"
 				h={360}
 				bg={isDark ? 'dark.6' : 'gray.1'}
@@ -20,7 +19,6 @@ export const AdDetailsGallery = () => {
 				{Array.from({ length: 4 }).map((_, index) => (
 					<Paper
 						key={index}
-						withBorder
 						radius="sm"
 						h={74}
 						bg={isDark ? 'dark.5' : 'gray.0'}

@@ -17,14 +17,24 @@ body,
 
 body {
 	margin: 0;
-	background: #fff;
+	background: #f7f5f8;
 	transition: background 180ms ease;
 }
 
 :root[data-mantine-color-scheme='light'] body {
-	background: #fff;
+	background: #f7f5f8;
 }
 
 :root[data-mantine-color-scheme='dark'] body {
-	background: #fff;
+	background: #f7f5f8;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
 }

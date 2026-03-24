@@ -23,7 +23,7 @@ function App() {
 					{colorScheme === 'light' ? <IconMoon size={18} /> : <IconSun size={18} />}
 				</ActionIcon>
 			</Affix>
-			<Container size="xl" py="md">
+			<Container size={1335} py="md" px={0}>
 				<Stack gap="md">
 					<ErrorBoundary>
 						<AppRouter />

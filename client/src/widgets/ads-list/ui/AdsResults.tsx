@@ -1,4 +1,4 @@
-import { Badge, Box, Card, Paper, SimpleGrid, Stack, Text } from '@mantine/core'
+import { Box, Card, Paper, SimpleGrid, Stack, Text } from '@mantine/core'
 import { IconPhoto } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 
@@ -15,6 +15,44 @@ interface Props {
 
 const GRID_CARD_MIN_HEIGHT = 280
 const GRID_CARD_ASPECT_RATIO = '200 / 280'
+
+const RevisionBadge = () => (
+	<Box
+		style={{
+			display: 'inline-flex',
+			alignItems: 'center',
+			gap: 8,
+			width: 'fit-content',
+			height: 26,
+			paddingTop: 2,
+			paddingRight: 8,
+			paddingBottom: 2,
+			paddingLeft: 8,
+			boxSizing: 'border-box',
+			borderRadius: 8,
+			backgroundColor: '#fff4e8',
+			color: '#f59f00',
+			fontFamily: 'Roboto, sans-serif',
+			fontSize: 12,
+			fontWeight: 400,
+			lineHeight: '16px',
+			opacity: 1,
+		}}
+	>
+		<Box
+			style={{
+				width: 8,
+				height: 8,
+				borderRadius: '50%',
+				backgroundColor: '#f59f00',
+				flexShrink: 0,
+			}}
+		/>
+		<Text inherit span>
+			Требует доработок
+		</Text>
+	</Box>
+)
 
 const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 	<Stack gap={0} h="100%">
@@ -42,15 +80,10 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 				boxSizing: 'border-box',
 			}}
 		>
-			<Badge
-				variant="outline"
-				color="gray"
-				radius="sm"
-				size="sm"
+			<Box
 				style={{
 					width: 'fit-content',
 					height: 22,
-					textTransform: 'none',
 					background: '#fff',
 					fontWeight: 400,
 					borderColor: '#d9d9d9',
@@ -59,10 +92,18 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 					marginLeft: 4,
 					position: 'relative',
 					zIndex: 1,
+					border: '1px solid #d9d9d9',
+					borderRadius: 6,
+					paddingInline: 8,
+					display: 'inline-flex',
+					alignItems: 'center',
+					fontFamily: 'Roboto, sans-serif',
+					fontSize: 12,
+					lineHeight: '16px',
 				}}
 			>
 				{CATEGORY_LABELS[item.category]}
-			</Badge>
+			</Box>
 
 			<Text
 				lineClamp={2}
@@ -99,20 +140,7 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 				) : null}
 
 				<Box mt={8} style={{ height: 24 }}>
-					{item.needsRevision ? (
-						<Badge
-							color="orange"
-							variant="light"
-							radius="md"
-							size="sm"
-							style={{
-								width: 'fit-content',
-								textTransform: 'none',
-							}}
-						>
-							Требует доработок
-						</Badge>
-					) : null}
+					{item.needsRevision ? <RevisionBadge /> : null}
 				</Box>
 			</Box>
 		</Stack>
@@ -168,13 +196,15 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 		}}
 	>
 		<Paper
-			radius={12}
+			radius={0}
 			bg="#f6f4f2"
 			style={{
 				height: '100%',
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
+				borderTopLeftRadius: 12,
+				borderBottomLeftRadius: 12,
 			}}
 		>
 			<IconPhoto size={52} stroke={1.6} color="#a7a7a7" />
@@ -218,20 +248,7 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 				{formatPrice(item.price)}
 			</Text>
 
-			{item.needsRevision ? (
-				<Badge
-					color="orange"
-					variant="light"
-					radius="md"
-					size="sm"
-					style={{
-						width: 'fit-content',
-						textTransform: 'none',
-					}}
-				>
-					Требует доработок
-				</Badge>
-			) : null}
+			{item.needsRevision ? <RevisionBadge /> : null}
 
 			{!hasId ? (
 				<Text size="xs" c="dimmed">

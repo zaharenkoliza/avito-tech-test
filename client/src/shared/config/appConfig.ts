@@ -1,4 +1,4 @@
-﻿interface AppConfig {
+interface AppConfig {
 	apiBaseUrl: string
 	pageSize: number
 }
