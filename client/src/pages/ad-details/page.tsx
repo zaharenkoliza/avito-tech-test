@@ -1,47 +1,59 @@
-import { Alert, Button, Divider, Grid, Stack, Text, Title, useMantineColorScheme } from '@mantine/core'
-import { IconAlertCircle } from '@tabler/icons-react'
-import 'dayjs/locale/ru'
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import {
+	Alert,
+	Button,
+	Divider,
+	Grid,
+	Stack,
+	Text,
+	Title,
+	useMantineColorScheme,
+} from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
+import "dayjs/locale/ru";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import { useAdDetailsPageState } from './model/useAdDetailsPageState'
+import { useAdDetailsPageState } from "./model/useAdDetailsPageState";
 
-import { AppLoader } from '@/shared/ui/AppLoader'
+import { AppLoader } from "@/shared/ui/AppLoader";
 import {
 	AdCharacteristics,
 	AdDetailsGallery,
 	AdDetailsHeader,
 	AdRevisionNotice,
-} from '@/widgets/ad-details'
+} from "@/widgets/ad-details";
 
 export const AdDetailsPage = () => {
-	const { colorScheme } = useMantineColorScheme()
-	const isDark = colorScheme === 'dark'
-	const { error, isEdited, item, loading, missing, paramsEntries } = useAdDetailsPageState()
+	const { colorScheme } = useMantineColorScheme();
+	const isDark = colorScheme === "dark";
+	const { error, isEdited, item, loading, missing, paramsEntries } =
+		useAdDetailsPageState();
 
 	useEffect(() => {
-		document.body.style.backgroundColor = isDark ? 'var(--mantine-color-dark-8)' : '#ffffff'
+		document.body.style.backgroundColor = isDark
+			? "var(--mantine-color-dark-8)"
+			: "#ffffff";
 
 		return () => {
-			document.body.style.backgroundColor = ''
-		}
-	}, [isDark])
+			document.body.style.backgroundColor = "";
+		};
+	}, [isDark]);
 
 	if (loading) {
-		return <AppLoader />
+		return <AppLoader />;
 	}
 
 	if (error || !item) {
 		return (
 			<Stack p="lg">
 				<Alert color="red" icon={<IconAlertCircle size={16} />}>
-					{error ?? 'Объявление не найдено'}
+					{error ?? "Объявление не найдено"}
 				</Alert>
 				<Button component={Link} to="/ads" variant="default">
 					Назад к списку
 				</Button>
 			</Stack>
-		)
+		);
 	}
 
 	return (
@@ -72,8 +84,10 @@ export const AdDetailsPage = () => {
 
 			<Stack gap="xs">
 				<Title order={3}>Описание</Title>
-				<Text>{item.description?.trim() ? item.description : 'Отсутствует'}</Text>
+				<Text>
+					{item.description?.trim() ? item.description : "Отсутствует"}
+				</Text>
 			</Stack>
 		</Stack>
-	)
-}
+	);
+};

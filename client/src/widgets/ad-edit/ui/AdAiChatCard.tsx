@@ -7,20 +7,20 @@
 	Text,
 	TextInput,
 	useMantineColorScheme,
-} from '@mantine/core'
-import { IconBulb, IconMessageCircle2, IconSend2 } from '@tabler/icons-react'
-import { useState } from 'react'
+} from "@mantine/core";
+import { IconBulb, IconMessageCircle2, IconSend2 } from "@tabler/icons-react";
+import { useState } from "react";
 
-import { AiRequestErrorNotice } from './AiRequestErrorNotice'
+import { AiRequestErrorNotice } from "./AiRequestErrorNotice";
 
-import type { ChatMessage } from '@/shared/api'
+import type { ChatMessage } from "@/shared/api";
 
 interface Props {
-	chat: ChatMessage[]
-	isSending: boolean
-	error?: string
-	onCloseError: () => void
-	onSend: (message: string) => void
+	chat: ChatMessage[];
+	isSending: boolean;
+	error?: string;
+	onCloseError: () => void;
+	onSend: (message: string) => void;
 }
 
 export const AdAiChatCard = ({
@@ -30,28 +30,28 @@ export const AdAiChatCard = ({
 	onCloseError,
 	onSend,
 }: Props) => {
-	const [chatInput, setChatInput] = useState('')
-	const { colorScheme } = useMantineColorScheme()
-	const isDark = colorScheme === 'dark'
+	const [chatInput, setChatInput] = useState("");
+	const { colorScheme } = useMantineColorScheme();
+	const isDark = colorScheme === "dark";
 
 	const submit = () => {
-		if (isSending) return
-		const message = chatInput.trim()
-		if (!message) return
-		onSend(message)
-		setChatInput('')
-	}
+		if (isSending) return;
+		const message = chatInput.trim();
+		if (!message) return;
+		onSend(message);
+		setChatInput("");
+	};
 
 	return (
 		<Card
 			withBorder
 			radius="lg"
 			p="lg"
-			bg={isDark ? 'rgba(255, 146, 43, 0.12)' : 'orange.0'}
+			bg={isDark ? "rgba(255, 146, 43, 0.12)" : "orange.0"}
 			style={{
 				borderColor: isDark
-					? 'rgba(255, 163, 77, 0.28)'
-					: 'var(--mantine-color-orange-2)',
+					? "rgba(255, 163, 77, 0.28)"
+					: "var(--mantine-color-orange-2)",
 			}}
 		>
 			<Stack>
@@ -62,42 +62,42 @@ export const AdAiChatCard = ({
 						size="sm"
 						radius="sm"
 						leftSection={<IconBulb size={12} />}
-						style={{ alignSelf: 'flex-start' }}
+						style={{ alignSelf: "flex-start" }}
 					>
 						AI
 					</Badge>
 					<Text fw={600}>Чат с AI</Text>
 				</Stack>
 
-				<Stack gap="xs" mah={220} style={{ overflowY: 'auto' }}>
+				<Stack gap="xs" mah={220} style={{ overflowY: "auto" }}>
 					{chat.map((entry, index) => (
 						<Paper
 							key={`${entry.role}-${index}`}
 							p="xs"
 							radius="md"
 							bg={
-								entry.role === 'user'
+								entry.role === "user"
 									? isDark
-										? 'rgba(255, 163, 77, 0.18)'
-										: 'orange.1'
+										? "rgba(255, 163, 77, 0.18)"
+										: "orange.1"
 									: isDark
-										? 'dark.6'
-										: 'white'
+										? "dark.6"
+										: "white"
 							}
 							style={{
-								border: '1px solid',
+								border: "1px solid",
 								borderColor:
-									entry.role === 'user'
+									entry.role === "user"
 										? isDark
-											? 'rgba(255, 163, 77, 0.26)'
-											: 'var(--mantine-color-orange-2)'
+											? "rgba(255, 163, 77, 0.26)"
+											: "var(--mantine-color-orange-2)"
 										: isDark
-											? 'rgba(255, 255, 255, 0.08)'
-											: 'var(--mantine-color-orange-1)',
+											? "rgba(255, 255, 255, 0.08)"
+											: "var(--mantine-color-orange-1)",
 							}}
 						>
 							<Badge size="xs" mb={4} color="orange" variant="light">
-								{entry.role === 'user' ? 'Вы' : 'AI'}
+								{entry.role === "user" ? "Вы" : "AI"}
 							</Badge>
 							<Text size="sm">{entry.content}</Text>
 						</Paper>
@@ -112,7 +112,12 @@ export const AdAiChatCard = ({
 					placeholder="Спросите что-то про объявление"
 					disabled={isSending}
 					radius="md"
-					leftSection={<IconMessageCircle2 size={16} color="var(--mantine-color-orange-6)" />}
+					leftSection={
+						<IconMessageCircle2
+							size={16}
+							color="var(--mantine-color-orange-6)"
+						/>
+					}
 					rightSection={
 						<ActionIcon
 							variant="subtle"
@@ -128,20 +133,20 @@ export const AdAiChatCard = ({
 					}
 					styles={{
 						input: {
-							backgroundColor: isDark ? 'var(--mantine-color-dark-6)' : 'white',
+							backgroundColor: isDark ? "var(--mantine-color-dark-6)" : "white",
 							borderColor: isDark
-								? 'rgba(255, 163, 77, 0.28)'
-								: 'var(--mantine-color-orange-2)',
+								? "rgba(255, 163, 77, 0.28)"
+								: "var(--mantine-color-orange-2)",
 						},
 					}}
 					onKeyDown={(e) => {
-						if (e.key === 'Enter') {
-							e.preventDefault()
-							submit()
+						if (e.key === "Enter") {
+							e.preventDefault();
+							submit();
 						}
 					}}
 				/>
 			</Stack>
 		</Card>
-	)
-}
+	);
+};

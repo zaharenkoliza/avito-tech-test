@@ -1,1 +1,1 @@
-export { AdsListPage } from './page'
+export { AdsListPage } from "./page";

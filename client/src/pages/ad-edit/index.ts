@@ -1,1 +1,1 @@
-export { AdEditPage } from './page'
+export { AdEditPage } from "./page";

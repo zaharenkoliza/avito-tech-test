@@ -12,5 +12,5 @@ export type {
 	ListQuery,
 	SortColumn,
 	SortDirection,
-} from './types'
-export { adsService, aiService } from './services'
+} from "./types";
+export { adsService, aiService } from "./services";

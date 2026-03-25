@@ -1,15 +1,15 @@
-﻿import { Alert, Button, Stack, Text } from '@mantine/core'
-import { Component } from 'react'
+﻿import { Alert, Button, Stack, Text } from "@mantine/core";
+import { Component } from "react";
 
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 
 interface Props {
-	children: ReactNode
-	fallback?: ReactNode
+	children: ReactNode;
+	fallback?: ReactNode;
 }
 
 interface State {
-	hasError: boolean
+	hasError: boolean;
 }
 
 const DefaultFallback = () => (
@@ -21,24 +21,24 @@ const DefaultFallback = () => (
 			Перезагрузить страницу
 		</Button>
 	</Stack>
-)
+);
 
 export class ErrorBoundary extends Component<Props, State> {
-	state: State = { hasError: false }
+	state: State = { hasError: false };
 
 	static getDerivedStateFromError(): State {
-		return { hasError: true }
+		return { hasError: true };
 	}
 
 	componentDidCatch(error: unknown) {
-		console.error('UI ErrorBoundary caught an error', error)
+		console.error("UI ErrorBoundary caught an error", error);
 	}
 
 	render() {
 		if (this.state.hasError) {
-			return this.props.fallback ?? <DefaultFallback />
+			return this.props.fallback ?? <DefaultFallback />;
 		}
 
-		return this.props.children
+		return this.props.children;
 	}
 }

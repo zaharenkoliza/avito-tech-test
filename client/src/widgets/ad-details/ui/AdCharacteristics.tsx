@@ -1,44 +1,48 @@
-﻿import { Group, Stack, Text, Title } from '@mantine/core'
+﻿import { Group, Stack, Text, Title } from "@mantine/core";
 
 const PARAM_LABELS: Record<string, string> = {
-	type: 'Тип',
-	brand: 'Бренд',
-	model: 'Модель',
-	color: 'Цвет',
-	condition: 'Состояние',
-	address: 'Адрес',
-	area: 'Площадь',
-	floor: 'Этаж',
-	yearOfManufacture: 'Год выпуска',
-	transmission: 'КПП',
-	mileage: 'Пробег',
-	enginePower: 'Мощность',
-}
+	type: "Тип",
+	brand: "Бренд",
+	model: "Модель",
+	color: "Цвет",
+	condition: "Состояние",
+	address: "Адрес",
+	area: "Площадь",
+	floor: "Этаж",
+	yearOfManufacture: "Год выпуска",
+	transmission: "КПП",
+	mileage: "Пробег",
+	enginePower: "Мощность",
+};
 
 const PARAM_VALUE_LABELS: Record<string, string> = {
-	phone: 'Телефон',
-	laptop: 'Ноутбук',
-	misc: 'Прочее',
-	new: 'Новый',
-	used: 'Б/У',
-	automatic: 'Автомат',
-	manual: 'Механика',
-	flat: 'Квартира',
-	house: 'Дом',
-	room: 'Комната',
-}
+	phone: "Телефон",
+	laptop: "Ноутбук",
+	misc: "Прочее",
+	new: "Новый",
+	used: "Б/У",
+	automatic: "Автомат",
+	manual: "Механика",
+	flat: "Квартира",
+	house: "Дом",
+	room: "Комната",
+};
 
 const formatParamValue = (value: unknown): string => {
-	if (value === undefined || value === null || value === '') return '—'
-	if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-		const raw = String(value)
-		return PARAM_VALUE_LABELS[raw] ?? raw
+	if (value === undefined || value === null || value === "") return "—";
+	if (
+		typeof value === "string" ||
+		typeof value === "number" ||
+		typeof value === "boolean"
+	) {
+		const raw = String(value);
+		return PARAM_VALUE_LABELS[raw] ?? raw;
 	}
-	return '—'
-}
+	return "—";
+};
 
 interface Props {
-	paramsEntries: [string, unknown][]
+	paramsEntries: [string, unknown][];
 }
 
 export const AdCharacteristics = ({ paramsEntries }: Props) => (
@@ -57,5 +61,4 @@ export const AdCharacteristics = ({ paramsEntries }: Props) => (
 			)}
 		</Stack>
 	</Stack>
-)
-
+);

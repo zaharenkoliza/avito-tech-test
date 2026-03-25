@@ -1,25 +1,25 @@
-﻿import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+﻿import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import js from '@eslint/js'
-import { defineConfig, globalIgnores } from 'eslint/config'
-import globals from 'globals'
-import importPlugin from 'eslint-plugin-import'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import js from "@eslint/js";
+import { defineConfig, globalIgnores } from "eslint/config";
+import globals from "globals";
+import importPlugin from "eslint-plugin-import";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig([
-	globalIgnores(['dist', 'node_modules']),
+	globalIgnores(["dist", "node_modules"]),
 	{
 		linterOptions: {
-			reportUnusedDisableDirectives: 'error',
+			reportUnusedDisableDirectives: "error",
 		},
 	},
 	{
-		files: ['**/*.{ts,tsx}'],
+		files: ["**/*.{ts,tsx}"],
 		extends: [
 			js.configs.recommended,
 			tseslint.configs.recommendedTypeChecked,
@@ -39,32 +39,38 @@ export default defineConfig([
 			},
 		},
 		rules: {
-			'@typescript-eslint/consistent-type-imports': [
-				'error',
-				{ prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+			"@typescript-eslint/consistent-type-imports": [
+				"error",
+				{ prefer: "type-imports", fixStyle: "inline-type-imports" },
 			],
-			'@typescript-eslint/no-floating-promises': 'error',
-			'@typescript-eslint/no-misused-promises': [
-				'error',
+			"@typescript-eslint/no-floating-promises": "error",
+			"@typescript-eslint/no-misused-promises": [
+				"error",
 				{ checksVoidReturn: { attributes: false } },
 			],
-			'import/order': [
-				'error',
+			"import/order": [
+				"error",
 				{
-					groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'type'],
-					pathGroupsExcludedImportTypes: ['builtin'],
-					'newlines-between': 'always',
-					alphabetize: { order: 'asc', caseInsensitive: true },
+					groups: [
+						"builtin",
+						"external",
+						"internal",
+						["parent", "sibling", "index"],
+						"type",
+					],
+					pathGroupsExcludedImportTypes: ["builtin"],
+					"newlines-between": "always",
+					alphabetize: { order: "asc", caseInsensitive: true },
 				},
 			],
-			'react-hooks/set-state-in-effect': 'off',
-			'no-console': ['warn', { allow: ['warn', 'error'] }],
+			"react-hooks/set-state-in-effect": "off",
+			"no-console": ["warn", { allow: ["warn", "error"] }],
 		},
 	},
 	{
-		files: ['src/main.tsx'],
+		files: ["src/main.tsx"],
 		rules: {
-			'react-refresh/only-export-components': 'off',
+			"react-refresh/only-export-components": "off",
 		},
 	},
-])
+]);

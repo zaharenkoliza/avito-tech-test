@@ -1,4 +1,8 @@
-export { ALL_CATEGORIES, buildListQueryFromSearchParams, buildSearchParamsFromListState } from './lib/query-params'
+export {
+	ALL_CATEGORIES,
+	buildListQueryFromSearchParams,
+	buildSearchParamsFromListState,
+} from "./lib/query-params";
 export {
 	listReducer,
 	resetFilters,
@@ -10,4 +14,4 @@ export {
 	setSort,
 	toggleCategory,
 	type ListState,
-} from './model/slice'
+} from "./model/slice";

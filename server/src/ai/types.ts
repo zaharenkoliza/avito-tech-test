@@ -1,11 +1,11 @@
 ﻿export type ChatMessage = {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 };
 
 export type DescriptionInput = {
   item: unknown;
-  mode: 'generate' | 'improve';
+  mode: "generate" | "improve";
   hint?: string;
 };
 

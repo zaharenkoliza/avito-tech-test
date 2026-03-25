@@ -1,18 +1,18 @@
-﻿import 'dotenv/config';
-import Fastify from 'fastify';
+﻿import "dotenv/config";
+import Fastify from "fastify";
 
-import items from 'data/items.json' with { type: 'json' };
-import { Item } from 'src/types.ts';
+import items from "data/items.json" with { type: "json" };
+import { Item } from "src/types.ts";
 import {
   AIChatInSchema,
   AIDescriptionInSchema,
   AIPriceInSchema,
   ItemsGetInQuerySchema,
   ItemUpdateInSchema,
-} from 'src/validation.ts';
-import { treeifyError, ZodError } from 'zod';
-import { doesItemNeedRevision } from './src/utils.ts';
-import { createAIProvider } from './src/ai/ollama.ts';
+} from "src/validation.ts";
+import { treeifyError, ZodError } from "zod";
+import { doesItemNeedRevision } from "./src/utils.ts";
+import { createAIProvider } from "./src/ai/ollama.ts";
 
 const ITEMS = items as Item[];
 const aiProvider = createAIProvider();
@@ -21,20 +21,23 @@ const fastify = Fastify({
   logger: true,
 });
 
-await fastify.register((await import('@fastify/middie')).default);
+await fastify.register((await import("@fastify/middie")).default);
 
 // Искуственная задержка ответов, чтобы можно было протестировать состояния загрузки
 fastify.use((_, __, next) =>
-  new Promise(res => setTimeout(res, 300 + Math.random() * 700)).then(next),
+  new Promise((res) => setTimeout(res, 300 + Math.random() * 700)).then(next),
 );
 
 // Настройка CORS
 fastify.use((request, reply, next) => {
-  reply.setHeader('Access-Control-Allow-Origin', '*');
-  reply.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,OPTIONS');
-  reply.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  reply.setHeader("Access-Control-Allow-Origin", "*");
+  reply.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,OPTIONS");
+  reply.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization",
+  );
 
-  if (request.method === 'OPTIONS') {
+  if (request.method === "OPTIONS") {
     reply.statusCode = 204;
     reply.end();
     return;
@@ -49,17 +52,17 @@ interface ItemGetRequest extends Fastify.RequestGenericInterface {
   };
 }
 
-fastify.get<ItemGetRequest>('/items/:id', (request, reply) => {
+fastify.get<ItemGetRequest>("/items/:id", (request, reply) => {
   const itemId = Number(request.params.id);
 
   if (!Number.isFinite(itemId)) {
     reply
       .status(400)
-      .send({ success: false, error: 'Item ID path param should be a number' });
+      .send({ success: false, error: "Item ID path param should be a number" });
     return;
   }
 
-  const item = ITEMS.find(item => item.id === itemId);
+  const item = ITEMS.find((item) => item.id === itemId);
 
   if (!item) {
     reply
@@ -84,7 +87,7 @@ interface ItemsGetRequest extends Fastify.RequestGenericInterface {
   };
 }
 
-fastify.get<ItemsGetRequest>('/items', request => {
+fastify.get<ItemsGetRequest>("/items", (request) => {
   const {
     q,
     limit,
@@ -95,12 +98,12 @@ fastify.get<ItemsGetRequest>('/items', request => {
     sortDirection,
   } = ItemsGetInQuerySchema.parse(request.query);
 
-  const filteredItems = ITEMS.filter(item => {
+  const filteredItems = ITEMS.filter((item) => {
     return (
       item.title.toLowerCase().includes(q.toLowerCase()) &&
       (!needsRevision || doesItemNeedRevision(item)) &&
       (!categories?.length ||
-        categories.some(category => item.category === category))
+        categories.some((category) => item.category === category))
     );
   });
 
@@ -111,20 +114,20 @@ fastify.get<ItemsGetRequest>('/items', request => {
 
         if (!sortDirection) return comparisonValue;
 
-        if (sortColumn === 'title') {
+        if (sortColumn === "title") {
           comparisonValue = item1.title.localeCompare(item2.title);
-        } else if (sortColumn === 'createdAt') {
+        } else if (sortColumn === "createdAt") {
           comparisonValue =
             new Date(item1.createdAt).valueOf() -
             new Date(item2.createdAt).valueOf();
-        } else if (sortColumn === 'price') {
+        } else if (sortColumn === "price") {
           comparisonValue = item1.price - item2.price;
         }
 
-        return (sortDirection === 'desc' ? -1 : 1) * comparisonValue;
+        return (sortDirection === "desc" ? -1 : 1) * comparisonValue;
       })
       .slice(skip, skip + limit)
-      .map(item => ({
+      .map((item) => ({
         id: item.id,
         category: item.category,
         title: item.title,
@@ -142,17 +145,17 @@ interface ItemUpdateRequest extends Fastify.RequestGenericInterface {
   };
 }
 
-fastify.put<ItemUpdateRequest>('/items/:id', (request, reply) => {
+fastify.put<ItemUpdateRequest>("/items/:id", (request, reply) => {
   const itemId = Number(request.params.id);
 
   if (!Number.isFinite(itemId)) {
     reply
       .status(400)
-      .send({ success: false, error: 'Item ID path param should be a number' });
+      .send({ success: false, error: "Item ID path param should be a number" });
     return;
   }
 
-  const itemIndex = ITEMS.findIndex(item => item.id === itemId);
+  const itemIndex = ITEMS.findIndex((item) => item.id === itemId);
 
   if (itemIndex === -1) {
     reply
@@ -185,7 +188,7 @@ fastify.put<ItemUpdateRequest>('/items/:id', (request, reply) => {
   }
 });
 
-fastify.post('/ai/description', async (request, reply) => {
+fastify.post("/ai/description", async (request, reply) => {
   try {
     const payload = AIDescriptionInSchema.parse(request.body);
     return await aiProvider.generateDescription(payload);
@@ -197,11 +200,14 @@ fastify.post('/ai/description', async (request, reply) => {
 
     reply
       .status(502)
-      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+      .send({
+        success: false,
+        error: error instanceof Error ? error.message : "AI error",
+      });
   }
 });
 
-fastify.post('/ai/price', async (request, reply) => {
+fastify.post("/ai/price", async (request, reply) => {
   try {
     const payload = AIPriceInSchema.parse(request.body);
     return await aiProvider.suggestPrice(payload);
@@ -213,11 +219,14 @@ fastify.post('/ai/price', async (request, reply) => {
 
     reply
       .status(502)
-      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+      .send({
+        success: false,
+        error: error instanceof Error ? error.message : "AI error",
+      });
   }
 });
 
-fastify.post('/ai/chat', async (request, reply) => {
+fastify.post("/ai/chat", async (request, reply) => {
   try {
     const payload = AIChatInSchema.parse(request.body);
     return await aiProvider.chat(payload);
@@ -229,7 +238,10 @@ fastify.post('/ai/chat', async (request, reply) => {
 
     reply
       .status(502)
-      .send({ success: false, error: error instanceof Error ? error.message : 'AI error' });
+      .send({
+        success: false,
+        error: error instanceof Error ? error.message : "AI error",
+      });
   }
 });
 
@@ -243,4 +255,3 @@ fastify.listen({ port }, function (err, _address) {
 
   fastify.log.debug(`Server is listening on port ${port}`);
 });
-

@@ -1,1 +1,1 @@
-export { formatAdsCount, formatPrice } from './format'
+export { formatAdsCount, formatPrice } from "./format";

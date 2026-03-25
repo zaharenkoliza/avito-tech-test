@@ -10,56 +10,62 @@ import {
 	Text,
 	TextInput,
 	Textarea,
-} from '@mantine/core'
-import { type UseFormReturnType } from '@mantine/form'
-import { IconBulb, IconLoader2, IconX } from '@tabler/icons-react'
+} from "@mantine/core";
+import { type UseFormReturnType } from "@mantine/form";
+import { IconBulb, IconLoader2, IconX } from "@tabler/icons-react";
 
-import { AiRequestErrorNotice } from './AiRequestErrorNotice'
-import { DescriptionDiffCard } from './DescriptionDiffCard'
+import { AiRequestErrorNotice } from "./AiRequestErrorNotice";
+import { DescriptionDiffCard } from "./DescriptionDiffCard";
 
 import type {
 	AutoParams,
 	ElectronicsParams,
 	RealEstateParams,
-} from '@/entities/ad/model/types'
+} from "@/entities/ad/model/types";
 
-import { CATEGORY_LABELS, type Category, type ItemWithRevision } from '@/entities/ad'
-import { formatPrice } from '@/shared/utils/format'
+import {
+	CATEGORY_LABELS,
+	type Category,
+	type ItemWithRevision,
+} from "@/entities/ad";
+import { formatPrice } from "@/shared/utils/format";
 
 const categoryOptions = [
-	{ value: 'auto', label: CATEGORY_LABELS.auto },
-	{ value: 'real_estate', label: CATEGORY_LABELS.real_estate },
-	{ value: 'electronics', label: CATEGORY_LABELS.electronics },
-]
+	{ value: "auto", label: CATEGORY_LABELS.auto },
+	{ value: "real_estate", label: CATEGORY_LABELS.real_estate },
+	{ value: "electronics", label: CATEGORY_LABELS.electronics },
+];
 
 const autoTransmissionOptions = [
-	{ value: 'automatic', label: 'Автомат' },
-	{ value: 'manual', label: 'Механика' },
-]
+	{ value: "automatic", label: "Автомат" },
+	{ value: "manual", label: "Механика" },
+];
 
 const realEstateTypeOptions = [
-	{ value: 'flat', label: 'Квартира' },
-	{ value: 'house', label: 'Дом' },
-	{ value: 'room', label: 'Комната' },
-]
+	{ value: "flat", label: "Квартира" },
+	{ value: "house", label: "Дом" },
+	{ value: "room", label: "Комната" },
+];
 
 const electronicsTypeOptions = [
-	{ value: 'phone', label: 'Телефон' },
-	{ value: 'laptop', label: 'Ноутбук' },
-	{ value: 'misc', label: 'Прочее' },
-]
+	{ value: "phone", label: "Телефон" },
+	{ value: "laptop", label: "Ноутбук" },
+	{ value: "misc", label: "Прочее" },
+];
 
 const electronicsConditionOptions = [
-	{ value: 'new', label: 'Новый' },
-	{ value: 'used', label: 'Б/У' },
-]
+	{ value: "new", label: "Новый" },
+	{ value: "used", label: "Б/У" },
+];
 
 const requiredLabel = (label: string) => (
 	<span>
-		<span style={{ color: 'var(--mantine-color-red-6)', marginRight: 4 }}>*</span>
+		<span style={{ color: "var(--mantine-color-red-6)", marginRight: 4 }}>
+			*
+		</span>
 		{label}
 	</span>
-)
+);
 
 const clearButton = (onClear: () => void) => (
 	<ActionIcon
@@ -67,20 +73,20 @@ const clearButton = (onClear: () => void) => (
 		color="gray"
 		size="sm"
 		onClick={(event) => {
-			event.preventDefault()
-			onClear()
+			event.preventDefault();
+			onClear();
 		}}
 		aria-label="Очистить поле"
 	>
 		<IconX size={12} />
 	</ActionIcon>
-)
+);
 
-const getEmptyParamsByCategory = (): ItemWithRevision['params'] => ({})
+const getEmptyParamsByCategory = (): ItemWithRevision["params"] => ({});
 
 const aiActionButtonProps = {
-	variant: 'light' as const,
-	color: 'orange' as const,
+	variant: "light" as const,
+	color: "orange" as const,
 	radius: 8,
 	w: 210,
 	h: 36,
@@ -89,23 +95,23 @@ const aiActionButtonProps = {
 	fw: 400,
 	fz: 14,
 	style: {
-		fontFamily: 'Roboto, sans-serif',
-		lineHeight: '22px',
-		letterSpacing: '0',
-		textAlign: 'center' as const,
+		fontFamily: "Roboto, sans-serif",
+		lineHeight: "22px",
+		letterSpacing: "0",
+		textAlign: "center" as const,
 	},
-}
+};
 
 const aiButtonIcon = (isLoading: boolean) =>
 	isLoading ? (
 		<IconLoader2
 			size={16}
 			stroke={1.8}
-			style={{ animation: 'spin 1s linear infinite' }}
+			style={{ animation: "spin 1s linear infinite" }}
 		/>
 	) : (
 		<IconBulb size={16} stroke={1.8} />
-	)
+	);
 
 const renderTextField = (
 	label: string,
@@ -120,39 +126,39 @@ const renderTextField = (
 		onChange={(event) => onChange(event.currentTarget.value)}
 		rightSection={value ? clearButton(onClear) : undefined}
 	/>
-)
+);
 
 interface CategoryFieldsProps {
-	form: UseFormReturnType<ItemWithRevision>
+	form: UseFormReturnType<ItemWithRevision>;
 }
 
 const AutoFields = ({ form }: CategoryFieldsProps) => {
-	const params = form.values.params as AutoParams
+	const params = form.values.params as AutoParams;
 
 	return (
 		<>
 			{renderTextField(
-				'Марка',
-				String(params.brand ?? ''),
-				(value) => form.setFieldValue('params.brand', value),
-				() => form.setFieldValue('params.brand', ''),
+				"Марка",
+				String(params.brand ?? ""),
+				(value) => form.setFieldValue("params.brand", value),
+				() => form.setFieldValue("params.brand", ""),
 			)}
 			{renderTextField(
-				'Модель',
-				String(params.model ?? ''),
-				(value) => form.setFieldValue('params.model', value),
-				() => form.setFieldValue('params.model', ''),
+				"Модель",
+				String(params.model ?? ""),
+				(value) => form.setFieldValue("params.model", value),
+				() => form.setFieldValue("params.model", ""),
 			)}
 			<NumberInput
 				label="Год выпуска"
 				min={0}
 				radius={8}
 				allowDecimal={false}
-				value={params.yearOfManufacture ?? ''}
+				value={params.yearOfManufacture ?? ""}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.yearOfManufacture',
-						typeof value === 'number' ? value : undefined,
+						"params.yearOfManufacture",
+						typeof value === "number" ? value : undefined,
 					)
 				}
 			/>
@@ -163,8 +169,8 @@ const AutoFields = ({ form }: CategoryFieldsProps) => {
 				value={params.transmission ?? null}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.transmission',
-						value === 'automatic' || value === 'manual' ? value : undefined,
+						"params.transmission",
+						value === "automatic" || value === "manual" ? value : undefined,
 					)
 				}
 				clearable
@@ -173,29 +179,32 @@ const AutoFields = ({ form }: CategoryFieldsProps) => {
 				label="Пробег"
 				min={0}
 				radius={8}
-				value={params.mileage ?? ''}
+				value={params.mileage ?? ""}
 				onChange={(value) =>
-					form.setFieldValue('params.mileage', typeof value === 'number' ? value : undefined)
+					form.setFieldValue(
+						"params.mileage",
+						typeof value === "number" ? value : undefined,
+					)
 				}
 			/>
 			<NumberInput
 				label="Мощность двигателя"
 				min={0}
 				radius={8}
-				value={params.enginePower ?? ''}
+				value={params.enginePower ?? ""}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.enginePower',
-						typeof value === 'number' ? value : undefined,
+						"params.enginePower",
+						typeof value === "number" ? value : undefined,
 					)
 				}
 			/>
 		</>
-	)
-}
+	);
+};
 
 const RealEstateFields = ({ form }: CategoryFieldsProps) => {
-	const params = form.values.params as RealEstateParams
+	const params = form.values.params as RealEstateParams;
 
 	return (
 		<>
@@ -206,25 +215,30 @@ const RealEstateFields = ({ form }: CategoryFieldsProps) => {
 				value={params.type ?? null}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.type',
-						value === 'flat' || value === 'house' || value === 'room' ? value : undefined,
+						"params.type",
+						value === "flat" || value === "house" || value === "room"
+							? value
+							: undefined,
 					)
 				}
 				clearable
 			/>
 			{renderTextField(
-				'Адрес',
-				String(params.address ?? ''),
-				(value) => form.setFieldValue('params.address', value),
-				() => form.setFieldValue('params.address', ''),
+				"Адрес",
+				String(params.address ?? ""),
+				(value) => form.setFieldValue("params.address", value),
+				() => form.setFieldValue("params.address", ""),
 			)}
 			<NumberInput
 				label="Площадь"
 				min={0}
 				radius={8}
-				value={params.area ?? ''}
+				value={params.area ?? ""}
 				onChange={(value) =>
-					form.setFieldValue('params.area', typeof value === 'number' ? value : undefined)
+					form.setFieldValue(
+						"params.area",
+						typeof value === "number" ? value : undefined,
+					)
 				}
 			/>
 			<NumberInput
@@ -232,17 +246,20 @@ const RealEstateFields = ({ form }: CategoryFieldsProps) => {
 				min={0}
 				radius={8}
 				allowDecimal={false}
-				value={params.floor ?? ''}
+				value={params.floor ?? ""}
 				onChange={(value) =>
-					form.setFieldValue('params.floor', typeof value === 'number' ? value : undefined)
+					form.setFieldValue(
+						"params.floor",
+						typeof value === "number" ? value : undefined,
+					)
 				}
 			/>
 		</>
-	)
-}
+	);
+};
 
 const ElectronicsFields = ({ form }: CategoryFieldsProps) => {
-	const params = form.values.params as ElectronicsParams
+	const params = form.values.params as ElectronicsParams;
 
 	return (
 		<>
@@ -253,23 +270,25 @@ const ElectronicsFields = ({ form }: CategoryFieldsProps) => {
 				value={params.type ?? null}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.type',
-						value === 'phone' || value === 'laptop' || value === 'misc' ? value : undefined,
+						"params.type",
+						value === "phone" || value === "laptop" || value === "misc"
+							? value
+							: undefined,
 					)
 				}
 				clearable
 			/>
 			{renderTextField(
-				'Бренд',
-				String(params.brand ?? ''),
-				(value) => form.setFieldValue('params.brand', value),
-				() => form.setFieldValue('params.brand', ''),
+				"Бренд",
+				String(params.brand ?? ""),
+				(value) => form.setFieldValue("params.brand", value),
+				() => form.setFieldValue("params.brand", ""),
 			)}
 			{renderTextField(
-				'Модель',
-				String(params.model ?? ''),
-				(value) => form.setFieldValue('params.model', value),
-				() => form.setFieldValue('params.model', ''),
+				"Модель",
+				String(params.model ?? ""),
+				(value) => form.setFieldValue("params.model", value),
+				() => form.setFieldValue("params.model", ""),
 			)}
 			<Select
 				label="Состояние"
@@ -278,55 +297,55 @@ const ElectronicsFields = ({ form }: CategoryFieldsProps) => {
 				value={params.condition ?? null}
 				onChange={(value) =>
 					form.setFieldValue(
-						'params.condition',
-						value === 'new' || value === 'used' ? value : undefined,
+						"params.condition",
+						value === "new" || value === "used" ? value : undefined,
 					)
 				}
 				clearable
 			/>
 			{renderTextField(
-				'Цвет',
-				String(params.color ?? ''),
-				(value) => form.setFieldValue('params.color', value),
-				() => form.setFieldValue('params.color', ''),
+				"Цвет",
+				String(params.color ?? ""),
+				(value) => form.setFieldValue("params.color", value),
+				() => form.setFieldValue("params.color", ""),
 			)}
 		</>
-	)
-}
+	);
+};
 
 const CategoryFields = ({ form }: CategoryFieldsProps) => {
-	if (form.values.category === 'auto') {
-		return <AutoFields form={form} />
+	if (form.values.category === "auto") {
+		return <AutoFields form={form} />;
 	}
 
-	if (form.values.category === 'real_estate') {
-		return <RealEstateFields form={form} />
+	if (form.values.category === "real_estate") {
+		return <RealEstateFields form={form} />;
 	}
 
-	return <ElectronicsFields form={form} />
-}
+	return <ElectronicsFields form={form} />;
+};
 
 interface PriceSuggestion {
-	value: number
-	rationale: string
+	value: number;
+	rationale: string;
 }
 
 interface Props {
-	form: UseFormReturnType<ItemWithRevision>
-	onSuggestPrice: () => void
-	isSuggestingPrice: boolean
-	hasRequestedPrice: boolean
-	priceSuggestion?: PriceSuggestion
-	priceRequestError?: string
-	onApplyPrice: () => void
-	onClosePriceResult: () => void
-	onRequestDescription: (mode: 'generate' | 'improve') => void
-	isGeneratingDescription: boolean
-	hasRequestedDescription: boolean
-	descriptionSuggestion?: string
-	descriptionRequestError?: string
-	onApplyDescription: () => void
-	onCloseDescriptionResult: () => void
+	form: UseFormReturnType<ItemWithRevision>;
+	onSuggestPrice: () => void;
+	isSuggestingPrice: boolean;
+	hasRequestedPrice: boolean;
+	priceSuggestion?: PriceSuggestion;
+	priceRequestError?: string;
+	onApplyPrice: () => void;
+	onClosePriceResult: () => void;
+	onRequestDescription: (mode: "generate" | "improve") => void;
+	isGeneratingDescription: boolean;
+	hasRequestedDescription: boolean;
+	descriptionSuggestion?: string;
+	descriptionRequestError?: string;
+	onApplyDescription: () => void;
+	onCloseDescriptionResult: () => void;
 }
 
 export const AdEditForm = ({
@@ -346,39 +365,41 @@ export const AdEditForm = ({
 	onApplyDescription,
 	onCloseDescriptionResult,
 }: Props) => {
-	const descriptionLength = (form.values.description ?? '').length
+	const descriptionLength = (form.values.description ?? "").length;
 	const priceButtonLabel = isSuggestingPrice
-		? 'Выполняется запрос'
+		? "Выполняется запрос"
 		: hasRequestedPrice
-			? 'Повторить запрос'
-			: 'Узнать рыночную цену'
-	const descriptionMode = form.values.description?.trim() ? 'improve' : 'generate'
+			? "Повторить запрос"
+			: "Узнать рыночную цену";
+	const descriptionMode = form.values.description?.trim()
+		? "improve"
+		: "generate";
 	const descriptionInitialLabel =
-		descriptionMode === 'generate' ? 'Придумать описание' : 'Улучшить описание'
+		descriptionMode === "generate" ? "Придумать описание" : "Улучшить описание";
 	const descriptionButtonLabel = isGeneratingDescription
-		? 'Выполняется запрос'
+		? "Выполняется запрос"
 		: hasRequestedDescription
-			? 'Повторить запрос'
-			: descriptionInitialLabel
+			? "Повторить запрос"
+			: descriptionInitialLabel;
 
 	const handleCategoryChange = (value: string | null) => {
-		const nextCategory = (value ?? 'electronics') as Category
+		const nextCategory = (value ?? "electronics") as Category;
 
 		if (nextCategory === form.values.category) {
-			return
+			return;
 		}
 
 		form.setValues({
 			...form.values,
 			category: nextCategory,
 			params: getEmptyParamsByCategory(),
-		} as ItemWithRevision)
-	}
+		} as ItemWithRevision);
+	};
 
 	return (
 		<Stack>
 			<Select
-				label={requiredLabel('Категория')}
+				label={requiredLabel("Категория")}
 				data={categoryOptions}
 				value={form.values.category}
 				w={220}
@@ -388,7 +409,7 @@ export const AdEditForm = ({
 					label: {
 						fontWeight: 700,
 						fontSize: 18,
-						lineHeight: '24px',
+						lineHeight: "24px",
 						marginBottom: 8,
 					},
 				}}
@@ -396,21 +417,21 @@ export const AdEditForm = ({
 			<Divider />
 
 			<TextInput
-				label={requiredLabel('Название')}
+				label={requiredLabel("Название")}
 				required
 				withAsterisk={false}
 				radius={8}
 				rightSection={
 					form.values.title
-						? clearButton(() => form.setFieldValue('title', ''))
+						? clearButton(() => form.setFieldValue("title", ""))
 						: undefined
 				}
-				{...form.getInputProps('title')}
+				{...form.getInputProps("title")}
 				styles={{
 					label: {
 						fontWeight: 700,
 						fontSize: 18,
-						lineHeight: '24px',
+						lineHeight: "24px",
 						marginBottom: 8,
 					},
 				}}
@@ -420,19 +441,19 @@ export const AdEditForm = ({
 			<Stack gap="xs">
 				<Group align="end" wrap="wrap">
 					<NumberInput
-						label={requiredLabel('Цена')}
+						label={requiredLabel("Цена")}
 						required
 						withAsterisk={false}
 						min={0}
 						flex={1}
 						radius={8}
-						rightSection={clearButton(() => form.setFieldValue('price', null))}
-						{...form.getInputProps('price')}
+						rightSection={clearButton(() => form.setFieldValue("price", null))}
+						{...form.getInputProps("price")}
 						styles={{
 							label: {
 								fontWeight: 700,
 								fontSize: 18,
-								lineHeight: '24px',
+								lineHeight: "24px",
 								marginBottom: 8,
 							},
 						}}
@@ -453,15 +474,15 @@ export const AdEditForm = ({
 							</Button>
 						</Popover.Target>
 						<Popover.Dropdown
-							bg={priceRequestError ? 'transparent' : undefined}
+							bg={priceRequestError ? "transparent" : undefined}
 							p={priceRequestError ? 0 : undefined}
 							style={
 								priceRequestError
 									? {
-											background: 'transparent',
-											border: 'none',
-											boxShadow: 'none',
-									  }
+											background: "transparent",
+											border: "none",
+											boxShadow: "none",
+										}
 									: undefined
 							}
 						>
@@ -476,14 +497,18 @@ export const AdEditForm = ({
 												Предлагаемая цена: {formatPrice(priceSuggestion.value)}
 											</Text>
 										) : null}
-										<Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
-											{priceSuggestion?.rationale ?? ''}
+										<Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+											{priceSuggestion?.rationale ?? ""}
 										</Text>
 										<Group gap="xs">
 											<Button size="xs" onClick={onApplyPrice}>
 												Применить
 											</Button>
-											<Button size="xs" variant="default" onClick={onClosePriceResult}>
+											<Button
+												size="xs"
+												variant="default"
+												onClick={onClosePriceResult}
+											>
 												Закрыть
 											</Button>
 										</Group>
@@ -509,12 +534,12 @@ export const AdEditForm = ({
 					minRows={6}
 					maxLength={1000}
 					radius={8}
-					{...form.getInputProps('description')}
+					{...form.getInputProps("description")}
 					styles={{
 						label: {
 							fontWeight: 700,
 							fontSize: 18,
-							lineHeight: '24px',
+							lineHeight: "24px",
 							marginBottom: 8,
 						},
 					}}
@@ -536,7 +561,7 @@ export const AdEditForm = ({
 				) : null}
 				{descriptionSuggestion ? (
 					<DescriptionDiffCard
-						originalText={form.values.description ?? ''}
+						originalText={form.values.description ?? ""}
 						improvedText={descriptionSuggestion}
 						onApply={onApplyDescription}
 						onClose={onCloseDescriptionResult}
@@ -544,5 +569,5 @@ export const AdEditForm = ({
 				) : null}
 			</Stack>
 		</Stack>
-	)
-}
+	);
+};
