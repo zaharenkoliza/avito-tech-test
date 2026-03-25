@@ -1,4 +1,4 @@
-import { Box, Card, Paper, SimpleGrid, Stack, Text } from '@mantine/core'
+﻿import { Box, Card, Paper, SimpleGrid, Stack, Text, useMantineColorScheme } from '@mantine/core'
 import { IconPhoto } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 
@@ -8,16 +8,16 @@ import type { AdListItem } from '@/shared/api'
 import { CATEGORY_LABELS } from '@/entities/ad'
 import { formatPrice } from '@/shared/utils/format'
 
-
 interface Props {
 	items: AdListItem[]
 	layout: ListState['layout']
+	isFiltered?: boolean
 }
 
 const GRID_CARD_MIN_HEIGHT = 280
 const GRID_CARD_ASPECT_RATIO = '200 / 280'
 
-const RevisionBadge = () => (
+const RevisionBadge = ({ isDark }: { isDark: boolean }) => (
 	<Box
 		style={{
 			display: 'inline-flex',
@@ -31,8 +31,8 @@ const RevisionBadge = () => (
 			paddingLeft: 8,
 			boxSizing: 'border-box',
 			borderRadius: 8,
-			backgroundColor: '#fff4e8',
-			color: '#f59f00',
+			backgroundColor: isDark ? 'rgba(245, 159, 0, 0.16)' : '#fff4e8',
+			color: isDark ? '#ffd08a' : '#f59f00',
 			fontFamily: 'Roboto, sans-serif',
 			fontSize: 12,
 			fontWeight: 400,
@@ -45,7 +45,7 @@ const RevisionBadge = () => (
 				width: 8,
 				height: 8,
 				borderRadius: '50%',
-				backgroundColor: '#f59f00',
+				backgroundColor: isDark ? '#ffb347' : '#f59f00',
 				flexShrink: 0,
 			}}
 		/>
@@ -55,11 +55,11 @@ const RevisionBadge = () => (
 	</Box>
 )
 
-const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
+const renderGridCardContent = (item: AdListItem, hasId: boolean, isDark: boolean) => (
 	<Stack gap={0} h="100%">
 		<Paper
 			radius={0}
-			bg="#f3f2f1"
+			bg={isDark ? 'var(--mantine-color-dark-6)' : '#f3f2f1'}
 			style={{
 				height: 150,
 				display: 'flex',
@@ -70,7 +70,7 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 				marginTop: -12,
 			}}
 		>
-			<IconPhoto size={52} stroke={1.6} color="#a7a7a7" />
+			<IconPhoto size={52} stroke={1.6} color={isDark ? '#69758a' : '#a7a7a7'} />
 		</Paper>
 
 		<Stack
@@ -85,15 +85,15 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 				style={{
 					width: 'fit-content',
 					height: 22,
-					background: '#fff',
+					background: isDark ? 'rgba(255, 255, 255, 0.04)' : '#fff',
 					fontWeight: 400,
-					borderColor: '#d9d9d9',
-					color: '#5f5f5f',
+					borderColor: isDark ? 'rgba(255, 255, 255, 0.12)' : '#d9d9d9',
+					color: isDark ? '#c4cad4' : '#5f5f5f',
 					marginTop: -18,
 					marginLeft: 4,
 					position: 'relative',
 					zIndex: 1,
-					border: '1px solid #d9d9d9',
+					border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.12)' : '#d9d9d9'}`,
 					borderRadius: 6,
 					paddingInline: 8,
 					display: 'inline-flex',
@@ -122,7 +122,7 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 
 			<Box mt="auto" style={{ minHeight: 52 }}>
 				<Text
-					c="#7f7f7f"
+					c={isDark ? '#c4cad4' : '#7f7f7f'}
 					style={{
 						fontFamily: 'Roboto, sans-serif',
 						fontWeight: 700,
@@ -141,14 +141,14 @@ const renderGridCardContent = (item: AdListItem, hasId: boolean) => (
 				) : null}
 
 				<Box mt={8} style={{ height: 24 }}>
-					{item.needsRevision ? <RevisionBadge /> : null}
+					{item.needsRevision ? <RevisionBadge isDark={isDark} /> : null}
 				</Box>
 			</Box>
 		</Stack>
 	</Stack>
 )
 
-const renderGridCard = (item: AdListItem, index: number) => {
+const renderGridCard = (item: AdListItem, index: number, isDark: boolean) => {
 	const hasId = typeof item.id === 'number'
 	const key = item.id ?? `${item.title}-${index}`
 
@@ -156,8 +156,8 @@ const renderGridCard = (item: AdListItem, index: number) => {
 		aspectRatio: GRID_CARD_ASPECT_RATIO,
 		minHeight: GRID_CARD_MIN_HEIGHT,
 		padding: 12,
-		borderColor: '#ece7e2',
-		boxShadow: '0 1px 0 rgba(27, 31, 35, 0.02)',
+		borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#ece7e2',
+		boxShadow: isDark ? 'none' : '0 1px 0 rgba(27, 31, 35, 0.02)',
 	}
 
 	if (hasId) {
@@ -166,7 +166,7 @@ const renderGridCard = (item: AdListItem, index: number) => {
 				key={key}
 				withBorder
 				radius={16}
-				bg="#ffffff"
+				bg={isDark ? 'var(--mantine-color-dark-7)' : '#ffffff'}
 				component={Link}
 				to={`/ads/${item.id}`}
 				style={{
@@ -176,19 +176,25 @@ const renderGridCard = (item: AdListItem, index: number) => {
 					color: 'inherit',
 				}}
 			>
-				{renderGridCardContent(item, true)}
+				{renderGridCardContent(item, true, isDark)}
 			</Card>
 		)
 	}
 
 	return (
-		<Card key={key} withBorder radius={16} bg="#ffffff" style={sharedStyles}>
-			{renderGridCardContent(item, false)}
+		<Card
+			key={key}
+			withBorder
+			radius={16}
+			bg={isDark ? 'var(--mantine-color-dark-7)' : '#ffffff'}
+			style={sharedStyles}
+		>
+			{renderGridCardContent(item, false, isDark)}
 		</Card>
 	)
 }
 
-const renderListCardContent = (item: AdListItem, hasId: boolean) => (
+const renderListCardContent = (item: AdListItem, hasId: boolean, isDark: boolean) => (
 	<Box
 		style={{
 			display: 'grid',
@@ -198,7 +204,7 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 	>
 		<Paper
 			radius={0}
-			bg="#f6f4f2"
+			bg={isDark ? 'var(--mantine-color-dark-6)' : '#f6f4f2'}
 			style={{
 				height: '100%',
 				display: 'flex',
@@ -208,12 +214,12 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 				borderBottomLeftRadius: 12,
 			}}
 		>
-			<IconPhoto size={52} stroke={1.6} color="#a7a7a7" />
+			<IconPhoto size={52} stroke={1.6} color={isDark ? '#69758a' : '#a7a7a7'} />
 		</Paper>
 
 		<Stack gap={6} px={20} py={12} justify="center">
 			<Text
-				c="#9a9a9a"
+				c={isDark ? '#9ea7b6' : '#9a9a9a'}
 				style={{
 					fontFamily: 'Roboto, sans-serif',
 					fontWeight: 400,
@@ -237,7 +243,7 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 			</Text>
 
 			<Text
-				c="#7f7f7f"
+				c={isDark ? '#c4cad4' : '#7f7f7f'}
 				style={{
 					fontFamily: 'Roboto, sans-serif',
 					fontWeight: 700,
@@ -249,7 +255,7 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 				{formatPrice(item.price)}
 			</Text>
 
-			{item.needsRevision ? <RevisionBadge /> : null}
+			{item.needsRevision ? <RevisionBadge isDark={isDark} /> : null}
 
 			{!hasId ? (
 				<Text size="xs" c="dimmed">
@@ -260,14 +266,14 @@ const renderListCardContent = (item: AdListItem, hasId: boolean) => (
 	</Box>
 )
 
-const renderListCard = (item: AdListItem, index: number) => {
+const renderListCard = (item: AdListItem, index: number, isDark: boolean) => {
 	const hasId = typeof item.id === 'number'
 	const key = item.id ?? `${item.title}-${index}`
 
 	const sharedStyles = {
 		padding: 0,
-		borderColor: '#ece7e2',
-		boxShadow: '0 1px 0 rgba(27, 31, 35, 0.02)',
+		borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#ece7e2',
+		boxShadow: isDark ? 'none' : '0 1px 0 rgba(27, 31, 35, 0.02)',
 		overflow: 'hidden',
 	}
 
@@ -277,7 +283,7 @@ const renderListCard = (item: AdListItem, index: number) => {
 				key={key}
 				withBorder
 				radius={16}
-				bg="#ffffff"
+				bg={isDark ? 'var(--mantine-color-dark-7)' : '#ffffff'}
 				component={Link}
 				to={`/ads/${item.id}`}
 				style={{
@@ -287,26 +293,63 @@ const renderListCard = (item: AdListItem, index: number) => {
 					color: 'inherit',
 				}}
 			>
-				{renderListCardContent(item, true)}
+				{renderListCardContent(item, true, isDark)}
 			</Card>
 		)
 	}
 
 	return (
-		<Card key={key} withBorder radius={16} bg="#ffffff" style={sharedStyles}>
-			{renderListCardContent(item, false)}
+		<Card
+			key={key}
+			withBorder
+			radius={16}
+			bg={isDark ? 'var(--mantine-color-dark-7)' : '#ffffff'}
+			style={sharedStyles}
+		>
+			{renderListCardContent(item, false, isDark)}
 		</Card>
 	)
 }
 
-export const AdsResults = ({ items, layout }: Props) => {
+export const AdsResults = ({ items, layout, isFiltered = false }: Props) => {
+	const { colorScheme } = useMantineColorScheme()
+	const isDark = colorScheme === 'dark'
+
+	if (items.length === 0) {
+		return (
+			<Card
+				withBorder
+				radius={16}
+				p="xl"
+				bg={isDark ? 'var(--mantine-color-dark-7)' : '#ffffff'}
+				style={{
+					borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#ece7e2',
+					boxShadow: isDark ? 'none' : '0 1px 0 rgba(27, 31, 35, 0.02)',
+				}}
+			>
+				<Stack gap={8} align="center" py={28}>
+					<Text fw={700} size="lg">
+						{isFiltered ? 'Ничего не найдено' : 'Объявлений пока нет'}
+					</Text>
+					<Text c="dimmed" ta="center" maw={420}>
+						{isFiltered
+							? 'Попробуйте изменить запрос или сбросить часть фильтров.'
+							: 'Когда объявления появятся, они будут показаны здесь.'}
+					</Text>
+				</Stack>
+			</Card>
+		)
+	}
+
 	if (layout === 'list') {
-		return <Stack gap={12}>{items.map((item, index) => renderListCard(item, index))}</Stack>
+		return (
+			<Stack gap={12}>{items.map((item, index) => renderListCard(item, index, isDark))}</Stack>
+		)
 	}
 
 	return (
 		<SimpleGrid cols={{ base: 1, xs: 2, md: 3, lg: 4, xl: 5 }} spacing={14} verticalSpacing={14}>
-			{items.map((item, index) => renderGridCard(item, index))}
+			{items.map((item, index) => renderGridCard(item, index, isDark))}
 		</SimpleGrid>
 	)
 }

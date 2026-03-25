@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { getMissingFields, type ItemWithRevision } from '@/entities/ad'
-import { getErrorMessage } from '@/shared/api/apiClient'
+import { getErrorMessage, isNotFoundError } from '@/shared/api/apiClient'
 import { adsService } from '@/shared/api/services'
 
 export const useAdDetailsPageState = () => {
@@ -30,6 +30,12 @@ export const useAdDetailsPageState = () => {
 			.then(setItem)
 			.catch((requestError) => {
 				if (controller.signal.aborted) return
+
+				if (isNotFoundError(requestError)) {
+					void navigate('/ads', { replace: true })
+					return
+				}
+
 				setError(getErrorMessage(requestError))
 			})
 			.finally(() => {

@@ -1,4 +1,4 @@
-import { Alert, Button, Grid, Group, Stack, Title } from '@mantine/core'
+﻿import { Alert, Button, Grid, Group, Stack, Title, useMantineColorScheme } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconAlertCircle } from '@tabler/icons-react'
@@ -9,7 +9,7 @@ import { useAdAi } from './model/useAdAi'
 import { useAdDraft } from './model/useAdDraft'
 
 import { sanitizeItemForCategory, type ItemWithRevision } from '@/entities/ad'
-import { getErrorMessage } from '@/shared/api/apiClient'
+import { getErrorMessage, isNotFoundError } from '@/shared/api/apiClient'
 import { adsService } from '@/shared/api/services'
 import { AppLoader } from '@/shared/ui/AppLoader'
 import { AdAiChatCard, AdEditForm } from '@/widgets/ad-edit'
@@ -17,15 +17,13 @@ import { AdAiChatCard, AdEditForm } from '@/widgets/ad-edit'
 export const AdEditPage = () => {
 	const { id: idRaw } = useParams()
 	const navigate = useNavigate()
+	const { colorScheme } = useMantineColorScheme()
+	const isDark = colorScheme === 'dark'
 	const [loading, setLoading] = useState(false)
 	const [saving, setSaving] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [item, setItem] = useState<ItemWithRevision | null>(null)
 	const id = Number(idRaw)
-
-	useEffect(() => {
-		document.body.style.background = '#ffffff'
-	}, [])
 
 	const form = useForm<ItemWithRevision>({
 		initialValues: {
@@ -70,6 +68,14 @@ export const AdEditPage = () => {
 	} = useAdAi({ adId: id })
 
 	useEffect(() => {
+		document.body.style.backgroundColor = isDark ? 'var(--mantine-color-dark-8)' : '#ffffff'
+
+		return () => {
+			document.body.style.backgroundColor = ''
+		}
+	}, [isDark])
+
+	useEffect(() => {
 		setFormValuesRef.current = form.setValues
 	}, [form.setValues])
 
@@ -96,6 +102,12 @@ export const AdEditPage = () => {
 			})
 			.catch((requestError) => {
 				if (controller.signal.aborted) return
+
+				if (isNotFoundError(requestError)) {
+					void navigate('/ads', { replace: true })
+					return
+				}
+
 				setError(getErrorMessage(requestError))
 			})
 			.finally(() => {
@@ -180,7 +192,7 @@ export const AdEditPage = () => {
 	}
 
 	return (
-		<Stack p="lg" gap="lg">
+		<Stack p="lg" gap="lg" mih="100vh">
 			<Title order={2}>Редактирование объявления</Title>
 
 			{error ? (
@@ -257,9 +269,7 @@ export const AdEditPage = () => {
 					Сохранить
 				</Button>
 				<Button
-					variant="filled"
-					color="gray.2"
-					c="dark.4"
+					variant="default"
 					onClick={handleCancel}
 					w={108}
 					h={38}

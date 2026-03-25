@@ -1,4 +1,4 @@
-import axios from 'axios'
+﻿import axios from 'axios'
 
 import { APP_CONFIG } from '../config/appConfig'
 
@@ -56,3 +56,6 @@ export const getErrorMessage = (error: unknown): string => {
 
 	return 'Неизвестная ошибка'
 }
+
+export const isNotFoundError = (error: unknown): boolean =>
+	axios.isAxiosError(error) && error.response?.status === 404
