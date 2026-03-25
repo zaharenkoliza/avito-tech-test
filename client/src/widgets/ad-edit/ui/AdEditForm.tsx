@@ -384,6 +384,14 @@ export const AdEditForm = ({
 				w={220}
 				radius={8}
 				onChange={handleCategoryChange}
+				styles={{
+					label: {
+						fontWeight: 700,
+						fontSize: 18,
+						lineHeight: '24px',
+						marginBottom: 8,
+					},
+				}}
 			/>
 			<Divider />
 
@@ -398,6 +406,14 @@ export const AdEditForm = ({
 						: undefined
 				}
 				{...form.getInputProps('title')}
+				styles={{
+					label: {
+						fontWeight: 700,
+						fontSize: 18,
+						lineHeight: '24px',
+						marginBottom: 8,
+					},
+				}}
 			/>
 			<Divider />
 
@@ -412,6 +428,14 @@ export const AdEditForm = ({
 						radius={8}
 						rightSection={clearButton(() => form.setFieldValue('price', null))}
 						{...form.getInputProps('price')}
+						styles={{
+							label: {
+								fontWeight: 700,
+								fontSize: 18,
+								lineHeight: '24px',
+								marginBottom: 8,
+							},
+						}}
 					/>
 					<Popover
 						opened={Boolean(priceSuggestion ?? priceRequestError)}
@@ -472,6 +496,9 @@ export const AdEditForm = ({
 			</Stack>
 			<Divider />
 
+			<Text fw={700} size="lg">
+				Характеристики
+			</Text>
 			<CategoryFields form={form} />
 			<Divider />
 
@@ -483,6 +510,14 @@ export const AdEditForm = ({
 					maxLength={1000}
 					radius={8}
 					{...form.getInputProps('description')}
+					styles={{
+						label: {
+							fontWeight: 700,
+							fontSize: 18,
+							lineHeight: '24px',
+							marginBottom: 8,
+						},
+					}}
 				/>
 				<Group justify="space-between" align="flex-end" wrap="nowrap">
 					<Button

@@ -193,7 +193,9 @@ export const AdEditPage = () => {
 
 	return (
 		<Stack p="lg" gap="lg" mih="100vh">
-			<Title order={2}>Редактирование объявления</Title>
+			<Title order={2} fz={30}>
+				Редактирование объявления
+			</Title>
 
 			{error ? (
 				<Alert color="red" icon={<IconAlertCircle size={16} />}>
