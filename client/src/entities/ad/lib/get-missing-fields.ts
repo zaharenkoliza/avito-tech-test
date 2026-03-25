@@ -1,4 +1,4 @@
-import type { Item } from '../model/types'
+﻿import type { Item } from '../model/types'
 
 const isNil = (value: unknown) => value === undefined || value === null || value === ''
 

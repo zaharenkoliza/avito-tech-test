@@ -131,65 +131,65 @@ const AutoFields = ({ form }: CategoryFieldsProps) => {
 
 	return (
 		<>
-		{renderTextField(
-			'Марка',
-			String(params.brand ?? ''),
-			(value) => form.setFieldValue('params.brand', value),
-			() => form.setFieldValue('params.brand', ''),
-		)}
-		{renderTextField(
-			'Модель',
-			String(params.model ?? ''),
-			(value) => form.setFieldValue('params.model', value),
-			() => form.setFieldValue('params.model', ''),
-		)}
-		<NumberInput
-			label="Год выпуска"
-			min={0}
-			radius={8}
-			allowDecimal={false}
-			value={params.yearOfManufacture ?? ''}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.yearOfManufacture',
-					typeof value === 'number' ? value : undefined,
-				)
-			}
-		/>
-		<Select
-			label="Коробка передач"
-			radius={8}
-			data={autoTransmissionOptions}
-			value={params.transmission ?? null}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.transmission',
-					value === 'automatic' || value === 'manual' ? value : undefined,
-				)
-			}
-			clearable
-		/>
-		<NumberInput
-			label="Пробег"
-			min={0}
-			radius={8}
-			value={params.mileage ?? ''}
-			onChange={(value) =>
-				form.setFieldValue('params.mileage', typeof value === 'number' ? value : undefined)
-			}
-		/>
-		<NumberInput
-			label="Мощность двигателя"
-			min={0}
-			radius={8}
-			value={params.enginePower ?? ''}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.enginePower',
-					typeof value === 'number' ? value : undefined,
-				)
-			}
-		/>
+			{renderTextField(
+				'Марка',
+				String(params.brand ?? ''),
+				(value) => form.setFieldValue('params.brand', value),
+				() => form.setFieldValue('params.brand', ''),
+			)}
+			{renderTextField(
+				'Модель',
+				String(params.model ?? ''),
+				(value) => form.setFieldValue('params.model', value),
+				() => form.setFieldValue('params.model', ''),
+			)}
+			<NumberInput
+				label="Год выпуска"
+				min={0}
+				radius={8}
+				allowDecimal={false}
+				value={params.yearOfManufacture ?? ''}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.yearOfManufacture',
+						typeof value === 'number' ? value : undefined,
+					)
+				}
+			/>
+			<Select
+				label="Коробка передач"
+				radius={8}
+				data={autoTransmissionOptions}
+				value={params.transmission ?? null}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.transmission',
+						value === 'automatic' || value === 'manual' ? value : undefined,
+					)
+				}
+				clearable
+			/>
+			<NumberInput
+				label="Пробег"
+				min={0}
+				radius={8}
+				value={params.mileage ?? ''}
+				onChange={(value) =>
+					form.setFieldValue('params.mileage', typeof value === 'number' ? value : undefined)
+				}
+			/>
+			<NumberInput
+				label="Мощность двигателя"
+				min={0}
+				radius={8}
+				value={params.enginePower ?? ''}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.enginePower',
+						typeof value === 'number' ? value : undefined,
+					)
+				}
+			/>
 		</>
 	)
 }
@@ -199,44 +199,44 @@ const RealEstateFields = ({ form }: CategoryFieldsProps) => {
 
 	return (
 		<>
-		<Select
-			label="Тип недвижимости"
-			radius={8}
-			data={realEstateTypeOptions}
-			value={params.type ?? null}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.type',
-					value === 'flat' || value === 'house' || value === 'room' ? value : undefined,
-				)
-			}
-			clearable
-		/>
-		{renderTextField(
-			'Адрес',
-			String(params.address ?? ''),
-			(value) => form.setFieldValue('params.address', value),
-			() => form.setFieldValue('params.address', ''),
-		)}
-		<NumberInput
-			label="Площадь"
-			min={0}
-			radius={8}
-			value={params.area ?? ''}
-			onChange={(value) =>
-				form.setFieldValue('params.area', typeof value === 'number' ? value : undefined)
-			}
-		/>
-		<NumberInput
-			label="Этаж"
-			min={0}
-			radius={8}
-			allowDecimal={false}
-			value={params.floor ?? ''}
-			onChange={(value) =>
-				form.setFieldValue('params.floor', typeof value === 'number' ? value : undefined)
-			}
-		/>
+			<Select
+				label="Тип недвижимости"
+				radius={8}
+				data={realEstateTypeOptions}
+				value={params.type ?? null}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.type',
+						value === 'flat' || value === 'house' || value === 'room' ? value : undefined,
+					)
+				}
+				clearable
+			/>
+			{renderTextField(
+				'Адрес',
+				String(params.address ?? ''),
+				(value) => form.setFieldValue('params.address', value),
+				() => form.setFieldValue('params.address', ''),
+			)}
+			<NumberInput
+				label="Площадь"
+				min={0}
+				radius={8}
+				value={params.area ?? ''}
+				onChange={(value) =>
+					form.setFieldValue('params.area', typeof value === 'number' ? value : undefined)
+				}
+			/>
+			<NumberInput
+				label="Этаж"
+				min={0}
+				radius={8}
+				allowDecimal={false}
+				value={params.floor ?? ''}
+				onChange={(value) =>
+					form.setFieldValue('params.floor', typeof value === 'number' ? value : undefined)
+				}
+			/>
 		</>
 	)
 }
@@ -246,50 +246,50 @@ const ElectronicsFields = ({ form }: CategoryFieldsProps) => {
 
 	return (
 		<>
-		<Select
-			label="Тип техники"
-			radius={8}
-			data={electronicsTypeOptions}
-			value={params.type ?? null}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.type',
-					value === 'phone' || value === 'laptop' || value === 'misc' ? value : undefined,
-				)
-			}
-			clearable
-		/>
-		{renderTextField(
-			'Бренд',
-			String(params.brand ?? ''),
-			(value) => form.setFieldValue('params.brand', value),
-			() => form.setFieldValue('params.brand', ''),
-		)}
-		{renderTextField(
-			'Модель',
-			String(params.model ?? ''),
-			(value) => form.setFieldValue('params.model', value),
-			() => form.setFieldValue('params.model', ''),
-		)}
-		<Select
-			label="Состояние"
-			radius={8}
-			data={electronicsConditionOptions}
-			value={params.condition ?? null}
-			onChange={(value) =>
-				form.setFieldValue(
-					'params.condition',
-					value === 'new' || value === 'used' ? value : undefined,
-				)
-			}
-			clearable
-		/>
-		{renderTextField(
-			'Цвет',
-			String(params.color ?? ''),
-			(value) => form.setFieldValue('params.color', value),
-			() => form.setFieldValue('params.color', ''),
-		)}
+			<Select
+				label="Тип техники"
+				radius={8}
+				data={electronicsTypeOptions}
+				value={params.type ?? null}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.type',
+						value === 'phone' || value === 'laptop' || value === 'misc' ? value : undefined,
+					)
+				}
+				clearable
+			/>
+			{renderTextField(
+				'Бренд',
+				String(params.brand ?? ''),
+				(value) => form.setFieldValue('params.brand', value),
+				() => form.setFieldValue('params.brand', ''),
+			)}
+			{renderTextField(
+				'Модель',
+				String(params.model ?? ''),
+				(value) => form.setFieldValue('params.model', value),
+				() => form.setFieldValue('params.model', ''),
+			)}
+			<Select
+				label="Состояние"
+				radius={8}
+				data={electronicsConditionOptions}
+				value={params.condition ?? null}
+				onChange={(value) =>
+					form.setFieldValue(
+						'params.condition',
+						value === 'new' || value === 'used' ? value : undefined,
+					)
+				}
+				clearable
+			/>
+			{renderTextField(
+				'Цвет',
+				String(params.color ?? ''),
+				(value) => form.setFieldValue('params.color', value),
+				() => form.setFieldValue('params.color', ''),
+			)}
 		</>
 	)
 }

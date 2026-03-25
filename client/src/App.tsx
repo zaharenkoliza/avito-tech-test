@@ -1,14 +1,11 @@
-import { ActionIcon, Affix, Container, Stack } from '@mantine/core'
+import { ActionIcon, Affix, Container, Stack, useMantineColorScheme } from '@mantine/core'
 import { IconMoon, IconSun } from '@tabler/icons-react'
 
 import { ErrorBoundary } from './app/ErrorBoundary'
-import { useAppDispatch, useAppSelector } from './app/hooks'
 import { AppRouter } from './app/router'
-import { toggleTheme } from './features/theme-toggle'
 
 function App() {
-	const dispatch = useAppDispatch()
-	const colorScheme = useAppSelector((state) => state.theme.colorScheme)
+	const { colorScheme, setColorScheme } = useMantineColorScheme()
 
 	return (
 		<>
@@ -17,13 +14,13 @@ function App() {
 					variant="filled"
 					radius="xl"
 					size="lg"
-					onClick={() => dispatch(toggleTheme())}
+					onClick={() => setColorScheme(colorScheme === 'light' ? 'dark' : 'light')}
 					aria-label="Переключить тему"
 				>
 					{colorScheme === 'light' ? <IconMoon size={18} /> : <IconSun size={18} />}
 				</ActionIcon>
 			</Affix>
-			<Container size={1335} py="md" px={0}>
+			<Container size={1335} pt={24} pb="md" px={0}>
 				<Stack gap="md">
 					<ErrorBoundary>
 						<AppRouter />

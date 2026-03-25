@@ -1,4 +1,4 @@
-import { Alert, Grid, Pagination, Stack, Text, Title } from '@mantine/core'
+import { Alert, Grid, Pagination, Stack, Text, Title, useMantineColorScheme } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 
@@ -18,6 +18,8 @@ import { AdsFiltersPanel, AdsResults, AdsToolbar } from '@/widgets/ads-list'
 
 export const AdsListPage = () => {
 	const [isCategoriesOpen, setIsCategoriesOpen] = useState(true)
+	const { colorScheme } = useMantineColorScheme()
+	const isDark = colorScheme === 'dark'
 	const {
 		data,
 		dispatch,
@@ -29,20 +31,24 @@ export const AdsListPage = () => {
 		sortValue,
 		totalPages,
 	} = useAdsListPageState()
+	const isFiltered =
+		searchInput.trim().length > 0 ||
+		listState.categories.length > 0 ||
+		listState.needsRevision
 
 	useEffect(() => {
-		document.body.style.background = '#f7f5f8'
+		document.body.style.backgroundColor = isDark ? 'var(--mantine-color-dark-8)' : '#f7f5f8'
 
 		return () => {
-			document.body.style.background = '#ffffff'
+			document.body.style.backgroundColor = ''
 		}
-	}, [])
+	}, [isDark])
 
 	return (
 		<Stack px={{ base: 'md', md: 0 }} py={0} gap="lg" style={{ width: '100%' }}>
 			<div>
 				<Title order={2}>Мои объявления</Title>
-				<Text c="#8a8a8a" size="lg">
+				<Text c={isDark ? '#9ea7b6' : '#8a8a8a'} size="lg">
 					{formatAdsCount(data.total)}
 				</Text>
 			</div>
@@ -77,10 +83,14 @@ export const AdsListPage = () => {
 							</Alert>
 						) : null}
 						{!loading && !error ? (
-							<AdsResults items={data.items} layout={listState.layout} />
+							<AdsResults
+								items={data.items}
+								layout={listState.layout}
+								isFiltered={isFiltered}
+							/>
 						) : null}
 
-						{!loading ? (
+						{!loading && data.total > 0 ? (
 							<Pagination
 								value={listState.page}
 								total={totalPages}

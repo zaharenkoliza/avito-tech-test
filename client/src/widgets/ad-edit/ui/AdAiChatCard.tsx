@@ -1,4 +1,13 @@
-import { ActionIcon, Badge, Card, Paper, Stack, Text, TextInput } from '@mantine/core'
+﻿import {
+	ActionIcon,
+	Badge,
+	Card,
+	Paper,
+	Stack,
+	Text,
+	TextInput,
+	useMantineColorScheme,
+} from '@mantine/core'
 import { IconBulb, IconMessageCircle2, IconSend2 } from '@tabler/icons-react'
 import { useState } from 'react'
 
@@ -22,6 +31,8 @@ export const AdAiChatCard = ({
 	onSend,
 }: Props) => {
 	const [chatInput, setChatInput] = useState('')
+	const { colorScheme } = useMantineColorScheme()
+	const isDark = colorScheme === 'dark'
 
 	const submit = () => {
 		if (isSending) return
@@ -36,8 +47,12 @@ export const AdAiChatCard = ({
 			withBorder
 			radius="lg"
 			p="lg"
-			bg="orange.0"
-			style={{ borderColor: 'var(--mantine-color-orange-2)' }}
+			bg={isDark ? 'rgba(255, 146, 43, 0.12)' : 'orange.0'}
+			style={{
+				borderColor: isDark
+					? 'rgba(255, 163, 77, 0.28)'
+					: 'var(--mantine-color-orange-2)',
+			}}
 		>
 			<Stack>
 				<Stack gap={6}>
@@ -60,13 +75,25 @@ export const AdAiChatCard = ({
 							key={`${entry.role}-${index}`}
 							p="xs"
 							radius="md"
-							bg={entry.role === 'user' ? 'orange.1' : 'white'}
+							bg={
+								entry.role === 'user'
+									? isDark
+										? 'rgba(255, 163, 77, 0.18)'
+										: 'orange.1'
+									: isDark
+										? 'dark.6'
+										: 'white'
+							}
 							style={{
 								border: '1px solid',
 								borderColor:
 									entry.role === 'user'
-										? 'var(--mantine-color-orange-2)'
-										: 'var(--mantine-color-orange-1)',
+										? isDark
+											? 'rgba(255, 163, 77, 0.26)'
+											: 'var(--mantine-color-orange-2)'
+										: isDark
+											? 'rgba(255, 255, 255, 0.08)'
+											: 'var(--mantine-color-orange-1)',
 							}}
 						>
 							<Badge size="xs" mb={4} color="orange" variant="light">
@@ -101,8 +128,10 @@ export const AdAiChatCard = ({
 					}
 					styles={{
 						input: {
-							backgroundColor: 'white',
-							borderColor: 'var(--mantine-color-orange-2)',
+							backgroundColor: isDark ? 'var(--mantine-color-dark-6)' : 'white',
+							borderColor: isDark
+								? 'rgba(255, 163, 77, 0.28)'
+								: 'var(--mantine-color-orange-2)',
 						},
 					}}
 					onKeyDown={(e) => {

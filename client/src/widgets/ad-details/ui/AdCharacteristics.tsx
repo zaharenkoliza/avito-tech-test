@@ -1,4 +1,4 @@
-import { Group, Stack, Text, Title } from '@mantine/core'
+﻿import { Group, Stack, Text, Title } from '@mantine/core'
 
 const PARAM_LABELS: Record<string, string> = {
 	type: 'Тип',

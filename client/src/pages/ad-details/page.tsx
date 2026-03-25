@@ -1,4 +1,4 @@
-﻿import { Alert, Button, Divider, Grid, Stack, Text, Title } from '@mantine/core'
+import { Alert, Button, Divider, Grid, Stack, Text, Title, useMantineColorScheme } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import 'dayjs/locale/ru'
 import { useEffect } from 'react'
@@ -15,11 +15,17 @@ import {
 } from '@/widgets/ad-details'
 
 export const AdDetailsPage = () => {
+	const { colorScheme } = useMantineColorScheme()
+	const isDark = colorScheme === 'dark'
 	const { error, isEdited, item, loading, missing, paramsEntries } = useAdDetailsPageState()
 
 	useEffect(() => {
-		document.body.style.background = '#ffffff'
-	}, [])
+		document.body.style.backgroundColor = isDark ? 'var(--mantine-color-dark-8)' : '#ffffff'
+
+		return () => {
+			document.body.style.backgroundColor = ''
+		}
+	}, [isDark])
 
 	if (loading) {
 		return <AppLoader />
@@ -39,7 +45,7 @@ export const AdDetailsPage = () => {
 	}
 
 	return (
-		<Stack p="lg" gap="lg" bg="white" mih="100vh">
+		<Stack p="lg" gap="lg" mih="100vh">
 			<AdDetailsHeader
 				id={item.id}
 				title={item.title}
@@ -71,5 +77,3 @@ export const AdDetailsPage = () => {
 		</Stack>
 	)
 }
-
-

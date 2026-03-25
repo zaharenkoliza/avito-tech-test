@@ -13,12 +13,16 @@ html,
 body,
 #root {
 	min-height: 100%;
+	overscroll-behavior-y: none;
 }
 
 body {
 	margin: 0;
-	background: #f7f5f8;
-	transition: background 180ms ease;
+	background: var(--mantine-color-body);
+	color: var(--mantine-color-text);
+	transition:
+		background 180ms ease,
+		color 180ms ease;
 }
 
 :root[data-mantine-color-scheme='light'] body {
@@ -26,7 +30,7 @@ body {
 }
 
 :root[data-mantine-color-scheme='dark'] body {
-	background: #f7f5f8;
+	background: var(--mantine-color-dark-8);
 }
 
 @keyframes spin {

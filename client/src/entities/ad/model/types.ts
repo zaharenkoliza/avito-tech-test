@@ -1,4 +1,4 @@
-export type Category = 'auto' | 'real_estate' | 'electronics'
+﻿export type Category = 'auto' | 'real_estate' | 'electronics'
 
 export interface AutoParams {
 	brand?: string

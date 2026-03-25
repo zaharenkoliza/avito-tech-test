@@ -1,4 +1,4 @@
-import { Card, Group, List, Stack, Text, useMantineColorScheme } from '@mantine/core'
+﻿import { Card, Group, List, Stack, Text, useMantineColorScheme } from '@mantine/core'
 
 interface Props {
 	missing: string[]
