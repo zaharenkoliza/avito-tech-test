@@ -26,8 +26,9 @@ const listSlice = createSlice({
 	name: 'list',
 	initialState,
 	reducers: {
-		setFromQueryState: (_, action: PayloadAction<Partial<ListState>>) => ({
+		setFromQueryState: (state, action: PayloadAction<Partial<ListState>>) => ({
 			...initialState,
+			layout: state.layout,
 			...action.payload,
 		}),
 		setQuery(state, action: PayloadAction<string>) {

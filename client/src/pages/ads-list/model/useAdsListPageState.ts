@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import type { AdsListResponse } from '@/shared/api'
@@ -19,38 +19,40 @@ export const useAdsListPageState = () => {
 	const listState = useAppSelector((state) => state.list)
 	const [params, setParams] = useSearchParams()
 	const paramsString = params.toString()
+	const initialQueryStateRef = useRef(
+		buildListQueryFromSearchParams(new URLSearchParams(paramsString)),
+	)
 	const [data, setData] = useState<AdsListResponse>({ items: [], total: 0 })
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
-	const [searchInput, setSearchInput] = useState('')
-	const [isHydratedFromUrl, setIsHydratedFromUrl] = useState(false)
+	const [searchInput, setSearchInput] = useState(initialQueryStateRef.current.q)
+	const hasHydratedFromUrlRef = useRef(false)
 
 	useEffect(() => {
-		const parsed = buildListQueryFromSearchParams(new URLSearchParams(paramsString))
+		if (hasHydratedFromUrlRef.current) {
+			return
+		}
+
+		hasHydratedFromUrlRef.current = true
 
 		dispatch(
 			setFromQueryState({
-				q: parsed.q,
-				categories: parsed.categories,
-				needsRevision: parsed.needsRevision,
-				sortColumn: parsed.sortColumn,
-				sortDirection: parsed.sortDirection,
-				page: parsed.page,
+				q: initialQueryStateRef.current.q,
+				categories: initialQueryStateRef.current.categories,
+				needsRevision: initialQueryStateRef.current.needsRevision,
+				sortColumn: initialQueryStateRef.current.sortColumn,
+				sortDirection: initialQueryStateRef.current.sortDirection,
+				page: initialQueryStateRef.current.page,
 			}),
 		)
-
-		setSearchInput(parsed.q)
-		setIsHydratedFromUrl(true)
-	}, [dispatch, paramsString])
+	}, [dispatch])
 
 	useEffect(() => {
-		if (!isHydratedFromUrl) return
-
 		setSearchInput(listState.q)
-	}, [isHydratedFromUrl, listState.q])
+	}, [listState.q])
 
 	useEffect(() => {
-		if (!isHydratedFromUrl) return
+		if (!hasHydratedFromUrlRef.current) return
 
 		const timeoutId = window.setTimeout(() => {
 			if (searchInput !== listState.q) {
@@ -59,10 +61,10 @@ export const useAdsListPageState = () => {
 		}, 400)
 
 		return () => clearTimeout(timeoutId)
-	}, [dispatch, isHydratedFromUrl, listState.q, searchInput])
+	}, [dispatch, listState.q, searchInput])
 
 	useEffect(() => {
-		if (!isHydratedFromUrl) return
+		if (!hasHydratedFromUrlRef.current) return
 
 		const controller = new AbortController()
 		setLoading(true)
@@ -94,7 +96,6 @@ export const useAdsListPageState = () => {
 
 		return () => controller.abort()
 	}, [
-		isHydratedFromUrl,
 		listState.categories,
 		listState.needsRevision,
 		listState.page,
@@ -104,7 +105,7 @@ export const useAdsListPageState = () => {
 	])
 
 	useEffect(() => {
-		if (!isHydratedFromUrl) return
+		if (!hasHydratedFromUrlRef.current) return
 
 		const nextParams = buildSearchParamsFromListState({
 			q: listState.q,
@@ -119,7 +120,6 @@ export const useAdsListPageState = () => {
 			setParams(nextParams, { replace: true })
 		}
 	}, [
-		isHydratedFromUrl,
 		listState.categories,
 		listState.needsRevision,
 		listState.page,
