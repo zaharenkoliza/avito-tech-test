@@ -48,12 +48,19 @@ docker compose up --build
 
 ```bash
 OLLAMA_MODEL=llama3:latest
+OLLAMA_TIMEOUT_MS=300000
 ```
 
 Если нужен более быстрый первый запуск, можно выбрать более легкую модель:
 
 ```bash
 OLLAMA_MODEL=llama3.2:3b docker compose up --build
+```
+
+Если Ollama отвечает слишком долго, таймаут можно увеличить через переменную окружения:
+
+```bash
+OLLAMA_MODEL=llama3.2:3b OLLAMA_TIMEOUT_MS=600000 docker compose up --build
 ```
 
 ### 2. Локально без Docker
